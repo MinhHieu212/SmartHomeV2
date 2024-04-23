@@ -7,6 +7,8 @@ import SettingScreen from "./SettingScreen";
 import VoiceScreen from "./VoiceScreen";
 import LoginScreen from "./LoginScreen";
 import WelcomeScreen from "./WelcomeScreen";
+import UserListScreen from "./UserListScreen"
+import UserDashboardScreen from "./UserDashboardScreen"
 
 export {
   WelcomeScreen,
@@ -18,4 +20,6 @@ export {
   DashboardScreen,
   DoorDeviceScreen,
   HomeScreen,
+  UserListScreen,
+  UserDashboardScreen
 };
