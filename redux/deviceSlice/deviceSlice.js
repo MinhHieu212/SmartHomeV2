@@ -29,7 +29,7 @@ export const deviceSlice = createSlice({
       // action.payload is object {name , state}
       const updatedDevicesInfomation = state.devicesInfomation.map((obj) => {
         if (obj.name == action.payload.name) {
-          return { ...obj, state: action.payload.state };
+          return { ...obj,  ...action.payload.data };
         } else {
           return obj;
         }
