@@ -19,7 +19,7 @@ LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const Tab = createBottomTabNavigator();
 
-const AppTab = () => {
+const UserTab = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { state, startRecognizing, stopRecognizing } = useVoiceRecognation();
@@ -130,4 +130,4 @@ const AppTab = () => {
   );
 };
 
-export default AppTab;
+export default UserTab;
