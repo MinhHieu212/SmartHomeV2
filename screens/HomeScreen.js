@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setDevicesInfomation,
   setlectAllDevicesInfomation,
-  setlectSingleDeviceInfomation,
 } from "../redux/deviceSlice/deviceSlice.js";
 import DeviceItem from "../components/DeviceItem";
 import { getSensorRecord } from "../apis/sensorAPI";
@@ -32,7 +31,7 @@ const HomeScreen = () => {
   const [kitchenLight, setKitchenLight] = useState(false);
   const [humidity, setHumidity] = useState(0);
   const [temperature, setTemperature] = useState(0);
-  const [light, setLight] = useState(0);
+  const [light, setLight] = useState("");
 
   const AllDevicesInfomation = useSelector(setlectAllDevicesInfomation);
 
@@ -89,6 +88,10 @@ const HomeScreen = () => {
       clearInterval(intervalSensor);
     };
   }, []);
+
+  useEffect(() => {
+    handleGetAllDevices();
+  }, [AllDevicesInfomation]);
 
   return (
     <SafeAreaView className="flex-1 bg-white mb-[70]">
