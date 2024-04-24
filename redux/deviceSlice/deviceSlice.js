@@ -2,7 +2,53 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   runningDevicesCount: 0,
-  devicesInfomation: [],
+  devicesInfomation: [
+    {
+      _id: "660bbc1f5ff8e39254110d8e",
+      device_id: 3,
+      name: "Living Room Light",
+      state: false,
+      type: "light",
+      schedule: [],
+      updatedAt: "2024-04-24T07:06:34.824Z",
+      topic: "living-room-light",
+    },
+    {
+      _id: "660bbc375ff8e39254110d91",
+      device_id: 4,
+      name: "Kitchen Light",
+      state: false,
+      type: "light",
+      schedule: [],
+      updatedAt: "2024-04-24T07:06:35.549Z",
+      topic: "kitchen-light",
+    },
+    {
+      _id: "660d266df45f00cdf91353fc",
+      device_id: 1,
+      name: "Living Room Fan",
+      state: false,
+      level: 1,
+      type: "fan",
+      isAuto: false,
+      updatedAt: "2024-04-24T07:00:43.129Z",
+      schedule: [],
+      topic: "fan",
+    },
+    {
+      _id: "660d2696f45f00cdf91353fe",
+      device_id: 2,
+      name: "Front Door",
+      state: false,
+      mode: "auto",
+      isAuto: true,
+      type: "door",
+      close_time: 33,
+      updatedAt: "2024-04-24T07:02:27.325Z",
+      topic: "door",
+      schedule: [],
+    },
+  ],
 };
 
 const countDevicesRunning = (devicesInfomation) => {
@@ -26,10 +72,10 @@ export const deviceSlice = createSlice({
     },
 
     updateDevicesInfomation: (state, action) => {
-      // action.payload is object {name , state}
+      // action.payload is object {name , data}
       const updatedDevicesInfomation = state.devicesInfomation.map((obj) => {
         if (obj.name == action.payload.name) {
-          return { ...obj, state: action.payload.state };
+          return { ...obj, ...action.payload.data };
         } else {
           return obj;
         }

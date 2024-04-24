@@ -5,7 +5,7 @@ export const getAllDivice = async () => {
   const responseLogin = await baseAPI
     .get(path)
     .then((response) => {
-      console.log("Success  -  getAllDivice");
+      // console.log("Success  -  getAllDivice");
       return response.data;
     })
     .catch((error) => {
@@ -21,7 +21,7 @@ export const getSingleDivice = async (device_id) => {
   const responseLogin = await baseAPI
     .get(path)
     .then((response) => {
-      console.log("Success  -  getSingleDivice");
+      // console.log("Success  -  getSingleDivice");
       return response.data;
     })
     .catch((error) => {

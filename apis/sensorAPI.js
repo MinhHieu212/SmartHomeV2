@@ -5,7 +5,7 @@ export const getSensorRecord = async ({ type, isAll }) => {
   const res = await baseAPI
     .get(path)
     .then((response) => {
-      console.log("Success  -  getSensorRecord");
+      // console.log("Success  -  getSensorRecord");
       return response.data;
     })
     .catch((error) => {
