@@ -6,13 +6,11 @@ import {
   StatusBar,
   ScrollView,
   Switch,
-  TouchableOpacity,
   Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { Picker } from "@react-native-picker/picker";
-import { getDoor } from "../apis/doorAPI";
 import { updateDeviceState } from "../apis/deviceAPI";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -31,92 +29,100 @@ const DoorDeviceScreen = () => {
     setlectSingleDeviceInfomation(state, "Front Door")
   );
 
-  const [notice, setNotice] = useState(DoorInformation?.isAuto || false);
-  const [doorOpen, setDoorOpen] = useState(DoorInformation?.state || false);
-  const [selectedMinute, setSelectedMinute] = useState(
-    DoorInformation.close_time.toString() +
-      (DoorInformation.close_time > 1 ? " minutes" : " minute")
-  );
+  const handleUpdateIsAuto = async () => {
+    const prevIsAuto = DoorInformation?.isAuto;
 
-  const getDoorInfo = async () => {
-    try {
-      const doorInfo = await getDoor();
-      if (doorInfo) {
-        setDoorOpen(doorInfo.data[0].state);
-        setNotice(doorInfo.data[0].isAuto);
-        setSelectedMinute(
-          doorInfo.data[0].close_time.toString() +
-            (doorInfo.data[0].close_time > 1 ? " minutes" : " minute")
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    dispatch(
+      updateDevicesInfomation({
+        name: DoorInformation?.name,
+        data: {
+          isAuto: !DoorInformation?.isAuto,
+        },
+      })
+    );
 
-  useEffect(() => {
-    getDoorInfo();
-  }, []);
-
-  const handleUpdateNotice = async () => {
     const putData = {
-      device_id: 2,
-      isAuto: !notice,
+      device_id: DoorInformation?.device_id,
+      isAuto: !prevIsAuto,
+      topic: DoorInformation?.topic,
     };
-
-    setNotice(!notice);
 
     try {
       await updateDeviceState(putData);
     } catch (error) {
-      getDoorInfo();
-      console.log(error);
+      dispatch(
+        updateDevicesInfomation({
+          name: DoorInformation?.name,
+          data: {
+            isAuto: prevIsAuto,
+          },
+        })
+      );
+      console.error(`Error updating device is Auto: ${error}`);
     }
   };
 
   const handleUpdateSelectedMinute = async (itemValue) => {
+    const prevCloseTime = DoorInformation?.close_time;
+
+    dispatch(
+      updateDevicesInfomation({
+        name: DoorInformation?.name,
+        data: {
+          close_time: DoorInformation?.close_time,
+        },
+      })
+    );
+
     const putData = {
-      device_id: 2,
+      device_id: DoorInformation?.device_id,
       close_time: parseInt(itemValue.split(" ")[0]),
     };
 
-    setSelectedMinute(itemValue);
-
     try {
-      const res = await updateDeviceState(putData);
-      if (res) {
-        setSelectedMinute(
-          res.data.close_time.toString() +
-            (res.data.close_time > 1 ? " minutes" : " minute")
-        );
-      }
+      await updateDeviceState(putData);
     } catch (error) {
-      getDoorInfo();
-      console.log(error);
+      dispatch(
+        updateDevicesInfomation({
+          name: DoorInformation?.name,
+          data: {
+            close_time: prevCloseTime,
+          },
+        })
+      );
     }
   };
 
   const handleOpenDoor = async () => {
+    const prevState = DoorInformation?.state;
+
+    dispatch(
+      updateDevicesInfomation({
+        name: DoorInformation?.name,
+        data: {
+          state: !DoorInformation?.state,
+        },
+      })
+    );
+
     const putData = {
-      device_id: 2,
-      state: !doorOpen,
+      device_id: DoorInformation?.device_id,
+      state: Number(!prevState),
+      topic: DoorInformation?.topic,
     };
 
-    setDoorOpen(!doorOpen);
-
     try {
-      const res = await updateDeviceState(putData);
-      if (res) {
-        dispatch(
-          updateDevicesInfomation({
-            name: "Front Door",
-            state: res?.data?.state || doorOpen,
-          })
-        );
-      }
+      await updateDeviceState(putData);
     } catch (error) {
-      getDoorInfo();
-      console.log(error);
+      dispatch(
+        updateDevicesInfomation({
+          name: DoorInformation?.name,
+          data: {
+            state: prevState,
+          },
+        })
+      );
+      console.error(`Error updating device state: ${error}`);
     }
   };
 
@@ -145,8 +151,8 @@ const DoorDeviceScreen = () => {
               trackColor={{ false: "#D4E2FD", true: "#2666DE" }}
               thumbColor={"#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
+              value={DoorInformation?.state}
               onValueChange={handleOpenDoor}
-              value={doorOpen}
               style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
             />
           </View>
@@ -160,23 +166,23 @@ const DoorDeviceScreen = () => {
             trackColor={{ false: "#D4E2FD", true: "#2666DE" }}
             thumbColor={"#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={handleUpdateNotice}
-            value={notice}
+            value={DoorInformation?.isAuto}
+            onValueChange={handleUpdateIsAuto}
             style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
           />
         </View>
         {/* auto mode */}
 
         {/* auto mode control */}
-        <View
-          className={`m-3 ${!notice ? "opacity-50" : ""}`}
-          pointerEvents={!notice ? "none" : "auto"}
-        >
+        <View className={`m-3`}>
           <View className="flex-row items-center justify-between rounded-2xl shadow-2x h-[70] bg-white p-3">
             <Text className="text-lg font-regular">Close door after</Text>
             <View className="w-[50%] justify-center h-[40] border-2 rounded-xl border-[#2666DE] p-0 m-0">
               <Picker
-                selectedValue={selectedMinute}
+                selectedValue={
+                  DoorInformation.close_time.toString() +
+                  (DoorInformation.close_time > 1 ? " minutes" : " minute")
+                }
                 onValueChange={(itemValue, itemIndex) =>
                   handleUpdateSelectedMinute(itemValue)
                 }

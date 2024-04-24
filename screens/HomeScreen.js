@@ -25,38 +25,12 @@ import { getSensorRecord } from "../apis/sensorAPI";
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [doorStatus, setDoorStatus] = useState(false);
-  const [fanStatus, setFanStatus] = useState(false);
-  const [livingRoomLight, setLivingRoomLight] = useState(false);
-  const [kitchenLight, setKitchenLight] = useState(false);
+
   const [humidity, setHumidity] = useState(0);
   const [temperature, setTemperature] = useState(0);
   const [light, setLight] = useState("");
 
   const AllDevicesInfomation = useSelector(setlectAllDevicesInfomation);
-
-  const handleGetAllDevices = async () => {
-    try {
-      const response = await getAllDivice();
-
-      dispatch(setDevicesInfomation(response.data));
-
-      setFanStatus(
-        response.data.find((item) => item.name === "Living Room Fan")?.state
-      );
-      setDoorStatus(
-        response.data.find((item) => item.name === "Front Door")?.state
-      );
-      setLivingRoomLight(
-        response.data.find((item) => item.name === "Living Room Light")?.state
-      );
-      setKitchenLight(
-        response.data.find((item) => item.name === "Kitchen Light")?.state
-      );
-    } catch (e) {
-      console.log(`Error get all device ${e}`);
-    }
-  };
 
   const handleGetAllSensorRecord = async () => {
     try {
@@ -77,6 +51,15 @@ const HomeScreen = () => {
     }
   };
 
+  const handleGetAllDevices = async () => {
+    try {
+      const response = await getAllDivice();
+      dispatch(setDevicesInfomation(response.data));
+    } catch (e) {
+      console.log(`Error get all device ${e}`);
+    }
+  };
+
   useEffect(() => {
     handleGetAllDevices();
 
@@ -88,10 +71,6 @@ const HomeScreen = () => {
       clearInterval(intervalSensor);
     };
   }, []);
-
-  useEffect(() => {
-    handleGetAllDevices();
-  }, [AllDevicesInfomation]);
 
   return (
     <SafeAreaView className="flex-1 bg-white mb-[70]">
@@ -160,52 +139,64 @@ const HomeScreen = () => {
             {/* Door  */}
             <View className="w-[47%]">
               <DeviceItem
-                device_name={"Front Door"}
+                device_name="Front Door"
                 device_obj={AllDevicesInfomation.find(
                   (item) => item.name === "Front Door"
                 )}
                 navigateDevices="DoorDevice"
-                status={doorStatus}
-                setStatus={setDoorStatus}
+                status={
+                  AllDevicesInfomation.find(
+                    (item) => item.name === "Front Door"
+                  )?.state
+                }
               ></DeviceItem>
             </View>
 
             {/* Fan  */}
             <View className="w-[47%]">
               <DeviceItem
-                device_name={"Living Room Fan"}
+                device_name="Living Room Fan"
                 device_obj={AllDevicesInfomation.find(
                   (item) => item.name === "Living Room Fan"
                 )}
                 navigateDevices="FanDevice"
-                status={fanStatus}
-                setStatus={setFanStatus}
+                status={
+                  AllDevicesInfomation.find(
+                    (item) => item.name === "Living Room Fan"
+                  )?.state
+                }
               ></DeviceItem>
             </View>
 
             {/* Ligh 1 */}
             <View className="w-[47%]">
               <DeviceItem
-                device_name={"Living Room Light"}
+                device_name="Living Room Light"
                 device_obj={AllDevicesInfomation.find(
                   (item) => item.name === "Living Room Light"
                 )}
                 navigateDevices=""
-                status={livingRoomLight}
-                setStatus={setLivingRoomLight}
+                status={
+                  AllDevicesInfomation.find(
+                    (item) => item.name === "Living Room Light"
+                  )?.state
+                }
               ></DeviceItem>
             </View>
 
             {/* Ligh 2 */}
             <View className="w-[47%]">
               <DeviceItem
-                device_name={"Kitchen Light"}
+                device_name="Kitchen Light"
                 device_obj={AllDevicesInfomation.find(
                   (item) => item.name === "Kitchen Light"
                 )}
                 navigateDevices=""
-                status={kitchenLight}
-                setStatus={setKitchenLight}
+                status={
+                  AllDevicesInfomation.find(
+                    (item) => item.name === "Kitchen Light"
+                  )?.state
+                }
               ></DeviceItem>
             </View>
           </View>

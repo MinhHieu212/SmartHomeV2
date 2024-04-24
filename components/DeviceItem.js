@@ -24,10 +24,9 @@ const getIconByType = (type, status) => {
 
 const DeviceItem = ({
   device_name = "",
-  device_obj = "",
-  status = false,
+  device_obj = {},
   navigateDevices,
-  setStatus = () => {},
+  status = false,
 }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -35,26 +34,34 @@ const DeviceItem = ({
   const mainIcon = getIconByType(device_obj?.type, status);
 
   const handleUpdateState = async () => {
-    const preState = status;
+    const prevState = status;
+
+    dispatch(
+      updateDevicesInfomation({
+        name: device_name,
+        data: {
+          state: !status,
+        },
+      })
+    );
 
     const putData = {
       device_id: device_obj?.device_id,
-      state: Number(!status),
+      state: Number(!prevState),
       topic: device_obj?.topic,
     };
 
     try {
-      setStatus(!status);
-      const response = await updateDeviceState(putData);
-
+      await updateDeviceState(putData);
+    } catch (error) {
       dispatch(
         updateDevicesInfomation({
-          name: device_obj?.name,
-          state: response?.data?.state,
+          name: device_name,
+          data: {
+            state: prevState,
+          },
         })
       );
-    } catch (error) {
-      setStatus(preState);
       console.error(`Error updating device state: ${error}`);
     }
   };
@@ -84,9 +91,9 @@ const DeviceItem = ({
           status ? "text-[white]" : "text-[#3579F9]"
         }`}
       >
-        {device_obj?.name === "Living Room Light"
-          ? "LRoom Light"
-          : device_obj?.name}
+        {device_name.includes("Living Room")
+          ? device_name.replace("Living Room", "LRoom")
+          : device_name}
       </Text>
 
       <View className="flex-row items-center justify-between">
