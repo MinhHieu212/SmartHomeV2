@@ -3,71 +3,59 @@ import React from "react";
 import { AdjustmentIcon, DoorIcon, FanIcon } from "../assets/Icons";
 import { useNavigation } from "@react-navigation/native";
 import { updateDeviceState } from "../apis/deviceAPI";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { updateDevicesInfomation } from "../redux/deviceSlice/deviceSlice";
 
+const getIconByType = (type, status) => {
+  const iconColor = status ? "white" : "#3579F9";
+
+  switch (type) {
+    case "door":
+      return <DoorIcon color={iconColor} />;
+    case "fan":
+      return <FanIcon color={iconColor} />;
+    case "light":
+      return <FontAwesome6 name="lightbulb" color={iconColor} size={35} />;
+    default:
+      return null;
+  }
+};
+
 const DeviceItem = ({
-  device_obj = {},
+  device_name = "",
+  device_obj = "",
   status = false,
   navigateDevices,
   setStatus = () => {},
 }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const Icons = [
-    {
-      type: "door",
-      icon: <DoorIcon color={status ? "white" : "#3579F9"}></DoorIcon>,
-    },
-    {
-      type: "fan",
-      icon: <FanIcon color={status ? "white" : "#3579F9"} />,
-    },
-    {
-      type: "light",
-      icon: (
-        <FontAwesome6
-          name={"lightbulb"}
-          color={status ? "white" : "#3579F9"}
-          size={35}
-        />
-      ),
-    },
-  ];
 
-  const getIconByType = (type, status) => {
-    const iconItem = Icons.find((item) => item.type === type);
-
-    if (iconItem) {
-      const { icon } = iconItem;
-      const iconComponent = React.cloneElement(icon, {
-        color: status ? "white" : "#3579F9",
-      });
-      return iconComponent;
-    }
-
-    return null;
-  };
-
-  const mainIcon = getIconByType(device_obj.type, status);
+  const mainIcon = getIconByType(device_obj?.type, status);
 
   const handleUpdateState = async () => {
     const preState = status;
-    setStatus(!status);
+
     const putData = {
-      device_id: device_obj.device_id,
+      device_id: device_obj?.device_id,
       state: Number(!status),
-      topic: device_obj.topic,
+      topic: device_obj?.topic,
     };
-    const response = await updateDeviceState(putData);
-    if (response.data) {
-      setStatus(response?.data?.state);
+
+    try {
+      setStatus(!status);
+      const response = await updateDeviceState(putData);
+
       dispatch(
-        updateDevicesInfomation({ name: device_obj.name, state: !preState })
+        updateDevicesInfomation({
+          name: device_obj?.name,
+          state: response?.data?.state,
+        })
       );
-    } else {
+    } catch (error) {
       setStatus(preState);
+      console.error(`Error updating device state: ${error}`);
     }
   };
 
@@ -96,9 +84,9 @@ const DeviceItem = ({
           status ? "text-[white]" : "text-[#3579F9]"
         }`}
       >
-        {device_obj.name === "Living Room Light"
+        {device_obj?.name === "Living Room Light"
           ? "LRoom Light"
-          : device_obj.name}
+          : device_obj?.name}
       </Text>
 
       <View className="flex-row items-center justify-between">
@@ -110,7 +98,7 @@ const DeviceItem = ({
           Philips
         </Text>
         <View>
-          {device_obj.type == "door" || device_obj.type == "fan" ? (
+          {device_obj?.type == "door" || device_obj?.type == "fan" ? (
             <TouchableOpacity
               onPress={() => navigation.navigate(navigateDevices)}
             >
@@ -124,7 +112,7 @@ const DeviceItem = ({
         </View>
       </View>
     </View>
-  );  
+  );
 };
 
 export default DeviceItem;
