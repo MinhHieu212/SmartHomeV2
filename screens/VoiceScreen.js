@@ -22,19 +22,19 @@ const VoiceScreen = () => {
       <ScrollView>
         <View className="flex-1 px-3 pb-10 h-[75vh] items-center mt-3 justify-center">
           <View className="absolute top-10">
-            <ScrollView horizontal>
-              <View className="border-2 p-1 flex-row items-center rounded-2xl mx-5 border-blue-400">
-                {message ? (
-                  <Text className="font-semibold text-lg text-gray-400 capitalize px-3">
-                    {message}
-                  </Text>
-                ) : (
-                  <Text className="font-semibold px-3 text-lg text-gray-400">
-                    No message available
-                  </Text>
-                )}
-              </View>
-            </ScrollView>
+            {/* <ScrollView horizontal> */}
+            <View className="border-2 p-1 flex-row items-center rounded-2xl mx-5 border-blue-400">
+              {message ? (
+                <Text className="font-semibold text-lg text-gray-400 capitalize px-3">
+                  {message}
+                </Text>
+              ) : (
+                <Text className="font-semibold px-3 text-lg text-gray-400">
+                  Hold Mic to Talk
+                </Text>
+              )}
+            </View>
+            {/* </ScrollView> */}
           </View>
 
           <Image source={require("../assets/VoiceImage.png")}></Image>

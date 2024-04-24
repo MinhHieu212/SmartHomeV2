@@ -21,6 +21,7 @@ import {
 } from "../redux/deviceSlice/deviceSlice.js";
 import DeviceItem from "../components/DeviceItem";
 import { getSensorRecord } from "../apis/sensorAPI";
+import { isEqual } from "lodash";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -28,9 +29,9 @@ const HomeScreen = () => {
 
   const [humidity, setHumidity] = useState(0);
   const [temperature, setTemperature] = useState(0);
-  const [light, setLight] = useState("");
+  const [light, setLight] = useState(0);
 
-  const AllDevicesInfomation = useSelector(setlectAllDevicesInfomation);
+  const AllDevicesInformation = useSelector(setlectAllDevicesInfomation);
 
   const handleGetAllSensorRecord = async () => {
     try {
@@ -54,7 +55,10 @@ const HomeScreen = () => {
   const handleGetAllDevices = async () => {
     try {
       const response = await getAllDivice();
-      dispatch(setDevicesInfomation(response.data));
+      let isDifferent = !isEqual(response.data, AllDevicesInformation);
+      if (isDifferent) {
+        dispatch(setDevicesInfomation(response.data));
+      }
     } catch (e) {
       console.log(`Error get all device ${e}`);
     }
@@ -140,12 +144,12 @@ const HomeScreen = () => {
             <View className="w-[47%]">
               <DeviceItem
                 device_name="Front Door"
-                device_obj={AllDevicesInfomation.find(
+                device_obj={AllDevicesInformation.find(
                   (item) => item.name === "Front Door"
                 )}
                 navigateDevices="DoorDevice"
                 status={
-                  AllDevicesInfomation.find(
+                  AllDevicesInformation.find(
                     (item) => item.name === "Front Door"
                   )?.state
                 }
@@ -156,12 +160,12 @@ const HomeScreen = () => {
             <View className="w-[47%]">
               <DeviceItem
                 device_name="Living Room Fan"
-                device_obj={AllDevicesInfomation.find(
+                device_obj={AllDevicesInformation.find(
                   (item) => item.name === "Living Room Fan"
                 )}
                 navigateDevices="FanDevice"
                 status={
-                  AllDevicesInfomation.find(
+                  AllDevicesInformation.find(
                     (item) => item.name === "Living Room Fan"
                   )?.state
                 }
@@ -172,12 +176,12 @@ const HomeScreen = () => {
             <View className="w-[47%]">
               <DeviceItem
                 device_name="Living Room Light"
-                device_obj={AllDevicesInfomation.find(
+                device_obj={AllDevicesInformation.find(
                   (item) => item.name === "Living Room Light"
                 )}
                 navigateDevices=""
                 status={
-                  AllDevicesInfomation.find(
+                  AllDevicesInformation.find(
                     (item) => item.name === "Living Room Light"
                   )?.state
                 }
@@ -188,12 +192,12 @@ const HomeScreen = () => {
             <View className="w-[47%]">
               <DeviceItem
                 device_name="Kitchen Light"
-                device_obj={AllDevicesInfomation.find(
+                device_obj={AllDevicesInformation.find(
                   (item) => item.name === "Kitchen Light"
                 )}
                 navigateDevices=""
                 status={
-                  AllDevicesInfomation.find(
+                  AllDevicesInformation.find(
                     (item) => item.name === "Kitchen Light"
                   )?.state
                 }

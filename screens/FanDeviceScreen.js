@@ -13,7 +13,7 @@ import {
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Feather from "react-native-vector-icons/Feather";
-// import ScheduleItem from "../components/ScheduleItem";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import Slider from "@react-native-community/slider";
 import { ScrollView } from "react-native-virtualized-view";
 import { updateDeviceState } from "../apis/deviceAPI";
@@ -22,6 +22,7 @@ import {
   setlectSingleDeviceInfomation,
   updateDevicesInfomation,
 } from "../redux/deviceSlice/deviceSlice";
+import ScheduleItem from "../components/ScheduleItem";
 
 const convertToHHMM = (dateTimeString) => {
   const date = new Date(dateTimeString);
@@ -30,23 +31,23 @@ const convertToHHMM = (dateTimeString) => {
   return `${hours}:${minutes}`;
 };
 
-const ScheduleItem = ({ item }) => (
-  <View className="mx-4 my-2 p-3  items-center justify-evenly shadow-2x bg-white shadow-zinc-600 rounded-lg">
-    <View className="v-[40%] flex-row space-x-2">
+const ScheduleComponnent = ({ item }) => (
+  <View className="mx-4 my-2 p-2 pt-3 items-center justify-evenly shadow-2x bg-white shadow-zinc-600 rounded-lg">
+    <View className=" flex-row space-x-2">
       <Text className="text-lg font-semibold ">From</Text>
       <Text className="border-2 border-blue-500 px-4 text-lg font-bold text-blue-600 rounded-md">
         {convertToHHMM(item.start)}
       </Text>
 
-      <View className="v-[40%] flex-row space-x-2"></View>
+      <View className=" flex-row space-x-2"></View>
       <Text className="text-lg font-semibold ">To</Text>
       <Text className="border-2 border-blue-500 px-4 text-lg font-bold text-blue-600 rounded-md">
         {convertToHHMM(item.start)}
       </Text>
     </View>
-    <View>
+    <View className="w-[100%]">
       <Slider
-        style={{ width: "100%", height: 20 }}
+        style={{ width: "100%", height: 25 }}
         minimumValue={1}
         maximumValue={3}
         minimumTrackTintColor="#2666DE"
@@ -55,7 +56,7 @@ const ScheduleItem = ({ item }) => (
         step={1}
         value={item.level}
       />
-      <View className="flex-row w-[100%] justify-between">
+      <View className="flex-row w-[90%] mt-3 justify-between">
         <Text className="text-md font-regular text-[#2666DE]">Level 1</Text>
         <Text className="text-md font-regular text-[#2666DE]">Level 2</Text>
         <Text className="text-md font-regular text-[#2666DE]">Level 3</Text>
@@ -69,74 +70,9 @@ const FanDeviceScreen = () => {
   const FanInformation = useSelector((state) =>
     setlectSingleDeviceInfomation(state, "Living Room Fan")
   );
+
   const [modalOpen, setModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [schedule, setSchedule] = useState([
-    {
-      start_schedule_id: "f172a10b-ced7-4109-98d8-1775c4f15d9b",
-      end_schedule_id: "d1481ec6-ec54-4366-98e6-0b7907d4e1c3",
-      start: "2024-04-03T15:04:00.000Z",
-      end: "2024-04-03T15:04:30.000Z",
-      level: 1,
-      _id: "661e2e472e125911eae1fd61",
-    },
-    {
-      start_schedule_id: "983eba96-c98c-46dc-9ba5-794c688dba25",
-      end_schedule_id: "9bd705d1-4ded-4457-ac72-cb05a86b338a",
-      start: "2024-04-03T15:04:00.000Z",
-      end: "2024-04-03T15:04:30.000Z",
-      level: 2,
-      _id: "661e2e572e125911eae1fd6d",
-    },
-    {
-      start_schedule_id: "983eba96-c98c-46dc-9ba5-794c688dba25",
-      end_schedule_id: "9bd705d1-4ded-4457-ac72-cb05a86b338a",
-      start: "2024-04-03T15:04:00.000Z",
-      end: "2024-04-03T15:04:30.000Z",
-      level: 3,
-      _id: "661e2e572e125911eae1fd6d",
-    },
-  ]);
-
-  const handleFrom = (key, value) => {
-    const dateObj = new Date();
-    const month = dateObj.getUTCMonth() + 1; // months from 1-12
-    const day = dateObj.getUTCDate();
-    const year = dateObj.getUTCFullYear();
-    const pMonth = month.toString().padStart(2, "0");
-    const pDay = day.toString().padStart(2, "0");
-    const time = `${year}-${pMonth}-${pDay}T${value}:00.000Z`;
-    setSchedule(
-      schedule.map((item) =>
-        item._id === key ? { ...item, start: time } : item
-      )
-    );
-  };
-
-  const handleTo = (key, value) => {
-    const dateObj = new Date();
-    const month = dateObj.getUTCMonth() + 1; // months from 1-12
-    const day = dateObj.getUTCDate();
-    const year = dateObj.getUTCFullYear();
-    const pMonth = month.toString().padStart(2, "0");
-    const pDay = day.toString().padStart(2, "0");
-    const time = `${year}-${pMonth}-${pDay}T${value}:00.000Z`;
-    setSchedule(
-      schedule.map((item) => (item._id === key ? { ...item, end: time } : item))
-    );
-  };
-
-  const handleLevel = (key, value) => {
-    setSchedule(
-      schedule.map((item) =>
-        item._id === key ? { ...item, level: value } : item
-      )
-    );
-  };
-
-  const handleDelete = (key) => {
-    setSchedule(schedule.filter((item) => item._id !== key));
-  };
 
   const handleUpdateAutoMode = async () => {
     const prevIsAuto = FanInformation?.isAuto;
@@ -222,17 +158,6 @@ const FanDeviceScreen = () => {
     }
   };
 
-  const handleAddSchedule = async () => {
-    setSchedule([
-      ...schedule,
-      {
-        start: "2024-04-03T00:04:00.000Z",
-        end: "2024-04-03T00:01:00.000Z",
-        level: 1,
-      },
-    ]);
-  };
-
   return (
     <SafeAreaView className="flex-1 bg-[#EEF5FF] mb-[70]">
       <StatusBar barStyle={"opaque"} backgroundColor="black"></StatusBar>
@@ -275,9 +200,10 @@ const FanDeviceScreen = () => {
             </View>
           </Modal>
         </View>
+
         {/* Add Modal */}
         <View
-          className={`h-[100] ${
+          className={`h-[50] ${
             addModalOpen ? "absolute" : "hidden"
           } flex-row-reverse items-center rounded-full mx-3`}
         >
@@ -291,22 +217,15 @@ const FanDeviceScreen = () => {
           >
             <View className="flex-1 bg-black/[0.5] items-center justify-end">
               <View className="bg-white rounded-t-2xl justify-center items-center p-3">
+                {/* title */}
                 <Text className="text-lg font-bold text-[#2666DE] mb-3">
-                  Fan Automation Mode
+                  Add new schedule
                 </Text>
-                <Text className="mb-10 text-lg text-center">
-                  The fan will automatically turn on when the temperature
-                  ishigher than 20°C.
-                </Text>
-                <View className="flex w-full items-center">
-                  <TouchableOpacity
-                    className="bg-[#2666DE] w-full p-3 justify-center items-center rounded-lg "
-                    onPress={() => setAddModalOpen(false)}
-                  >
-                    <Text className=" w-[85vw] justify-center text-center text-lg font-bold text-white">
-                      Exit
-                    </Text>
-                  </TouchableOpacity>
+                {/* content */}
+                <View className="mb-5 flex-row items-center justify-between ">
+                  <ScheduleItem
+                    closeModal={() => setAddModalOpen(false)}
+                  ></ScheduleItem>
                 </View>
               </View>
             </View>
@@ -355,10 +274,13 @@ const FanDeviceScreen = () => {
                 onValueChange={(value) => handleUpdateLevel(value)}
               />
               <View className="flex-row w-[100%] justify-between">
-                <Text className="text-lg font-regular text-[#2666DE]">
+                <Text className="text-md font-regular text-[#2666DE]">
                   Level 1
                 </Text>
-                <Text className="text-lg font-regular text-[#2666DE]">
+                <Text className="text-md font-regular text-[#2666DE]">
+                  Level 2
+                </Text>
+                <Text className="text-md font-regular text-[#2666DE]">
                   Level 3
                 </Text>
               </View>
@@ -389,21 +311,20 @@ const FanDeviceScreen = () => {
             <Text className="text-lg font-regular mx-2 my-1 text-[#6F7EA8]">
               Schedule
             </Text>
-            <TouchableOpacity
-              className="w-1/4 items-end"
-              onPress={() => setAddModalOpen(true)}
-            >
-              <Feather
-                name="plus"
-                className="text-[#2666DE]"
-                size={30}
-              ></Feather>
-            </TouchableOpacity>
+            <View className="px-3">
+              <TouchableOpacity onPress={() => setAddModalOpen(true)}>
+                <Feather
+                  name="plus"
+                  className="text-[#2666DE]"
+                  size={30}
+                ></Feather>
+              </TouchableOpacity>
+            </View>
           </View>
           <View className="rounded-md pb-10 ">
             <FlatList
-              data={schedule}
-              renderItem={({ item }) => ScheduleItem({ item })}
+              data={FanInformation.schedule}
+              renderItem={({ item }) => ScheduleComponnent({ item })}
               keyExtractor={(item) => item._id}
             ></FlatList>
           </View>

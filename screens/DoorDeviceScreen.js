@@ -69,7 +69,7 @@ const DoorDeviceScreen = () => {
       updateDevicesInfomation({
         name: DoorInformation?.name,
         data: {
-          close_time: DoorInformation?.close_time,
+          close_time: itemValue.split(" ")[0],
         },
       })
     );
@@ -132,7 +132,6 @@ const DoorDeviceScreen = () => {
       <Header name="Front Door"></Header>
       <ScrollView>
         {/* manual control */}
-
         <View className={`m-3`}>
           <Text className="text-lg font-regular mx-2 text-[#6F7EA8]">
             Manual Control
@@ -172,12 +171,13 @@ const DoorDeviceScreen = () => {
           />
         </View>
         {/* auto mode */}
-
         {/* auto mode control */}
-        <View className={`m-3`}>
+        <View className={`m-3 ${DoorInformation?.isAuto ? "" : "opacity-50"}`}>
           <View className="flex-row items-center justify-between rounded-2xl shadow-2x h-[70] bg-white p-3">
             <Text className="text-lg font-regular">Close door after</Text>
-            <View className="w-[50%] justify-center h-[40] border-2 rounded-xl border-[#2666DE] p-0 m-0">
+            <View
+              className={`w-[50%] justify-center h-[40] border-2 rounded-xl border-[#2666DE] p-0 m-0`}
+            >
               <Picker
                 selectedValue={
                   DoorInformation.close_time.toString() +

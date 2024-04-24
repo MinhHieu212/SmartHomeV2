@@ -1,4 +1,11 @@
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  View,
+} from "react-native";
 import React from "react";
 import { AdjustmentIcon, DoorIcon, FanIcon } from "../assets/Icons";
 import { useNavigation } from "@react-navigation/native";
@@ -72,52 +79,56 @@ const DeviceItem = ({
         status ? "bg-[#3579F9]" : "bg-gray-200"
       } shadow-2xl justify-between p-5 shadow-blue-600`}
     >
-      <View className="flex-row items-center justify-between h-[65%] pb-10">
-        <View className="-translate-x-2">{mainIcon}</View>
-        <View>
-          <Switch
-            trackColor={{ false: "#669BF7", true: "#D4E2FD" }}
-            thumbColor={"#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={handleUpdateState}
-            value={status}
-            style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
-          />
+      <Pressable onPress={() => handleUpdateState()}>
+        <View className="flex-row items-center justify-between h-[65%] pb-10">
+          <View className="-translate-x-2">{mainIcon}</View>
+          <View>
+            <Switch
+              trackColor={{ false: "#669BF7", true: "#D4E2FD" }}
+              thumbColor={"#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={handleUpdateState}
+              value={status}
+              style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
+            />
+          </View>
         </View>
-      </View>
 
-      <Text
-        className={`text-white font-bold text-lg ${
-          status ? "text-[white]" : "text-[#3579F9]"
-        }`}
-      >
-        {device_name.includes("Living Room")
-          ? device_name.replace("Living Room", "LRoom")
-          : device_name}
-      </Text>
-
-      <View className="flex-row items-center justify-between">
         <Text
-          className={`text-white font-bold text-md ${
+          className={`text-white font-bold text-lg ${
             status ? "text-[white]" : "text-[#3579F9]"
           }`}
         >
-          Philips
+          {device_name.includes("Living Room")
+            ? device_name.replace("Living Room", "LRoom")
+            : device_name}
         </Text>
-        <View>
-          {device_obj?.type == "door" || device_obj?.type == "fan" ? (
-            <TouchableOpacity
-              onPress={() => navigation.navigate(navigateDevices)}
-            >
-              <AdjustmentIcon
-                color={status ? "white" : "#3579F9"}
-              ></AdjustmentIcon>
-            </TouchableOpacity>
-          ) : (
-            <Text></Text>
-          )}
+
+        <View className="flex-row items-center justify-between">
+          <Text
+            className={`text-white font-bold text-md ${
+              status ? "text-[white]" : "text-[#3579F9]"
+            }`}
+          >
+            Philips
+          </Text>
+          <View>
+            {device_obj?.type == "door" || device_obj?.type == "fan" ? (
+              <TouchableOpacity
+                onPress={() => navigation.navigate(navigateDevices)}
+              >
+                <View className="absolute right-0 bottom-0 p-3 translate-x-3 translate-y-5">
+                  <AdjustmentIcon
+                    color={status ? "white" : "#3579F9"}
+                  ></AdjustmentIcon>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <Text></Text>
+            )}
+          </View>
         </View>
-      </View>
+      </Pressable>
     </View>
   );
 };
