@@ -40,7 +40,7 @@ npm install
 4. Prebuild Android Platform:
 
 ```bash
-npx expo prebuid -p android
+npx expo prebuild -p android
 ```
 
 5. Run app with development build:
@@ -57,6 +57,6 @@ npm start
 
 ## Use the Expo Go app on your mobile device to scan the QR code and open the app.
 
- ```bash
- https://expo.dev/preview/update?message=SmartHome%20Demo&updateRuntimeVersion=1.0.0&createdAt=2024-04-23T18%3A48%3A25.007Z&slug=smarthome&projectId=2f61f04e-cfaf-41ba-bf9d-7b30596bf230&group=5944cd63-5c12-42b6-a1e3-58bb19f5fc79
+```bash
+https://expo.dev/preview/update?message=SmartHome%20Demo&updateRuntimeVersion=1.0.0&createdAt=2024-04-23T18%3A48%3A25.007Z&slug=smarthome&projectId=2f61f04e-cfaf-41ba-bf9d-7b30596bf230&group=5944cd63-5c12-42b6-a1e3-58bb19f5fc79
 ```
