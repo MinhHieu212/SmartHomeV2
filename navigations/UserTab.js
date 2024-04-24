@@ -4,16 +4,18 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import React, { useEffect } from "react";
 import { COLOR } from "../constaints/Color";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { useVoiceRecognation } from "../hooks/useVoiceRecognition";
 import { VoiceScreen } from "../screens";
 import HomeStack from "./HomeStack";
 import SettingStack from "./SettingStack";
 
-
 import { LogBox } from "react-native";
-import { setVoiceMessage } from "../redux/voiceSlice/voiceSlide";
+import { selectMessage, setVoiceMessage } from "../redux/voiceSlice/voiceSlide";
+import { putVoiceCommand } from "../apis/voiceAPI";
+import { getAllDivice } from "../apis/deviceAPI";
+import { setDevicesInfomation } from "../redux/deviceSlice/deviceSlice";
 LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -26,18 +28,34 @@ const UserTab = () => {
 
   const handleVoicePressIn = () => {
     startRecognizing();
-    navigation.navigate("Voice");
+    // navigation.navigate("Voice");
   };
 
-  const handleVoicePressOut = () => {
-    stopRecognizing();
+  const handleVoicePressOut = async () => {
+    await stopRecognizing();
   };
 
   useEffect(() => {
     if (state.result.length > 0) {
       dispatch(setVoiceMessage(state.result[0]));
+      handleCallVoiceAPI(state.result[0]);
+
+      console.log(state.result[0]);
     }
   }, [state.result, dispatch]);
+
+  const handleCallVoiceAPI = async (message) => {
+    putData = {
+      command: message,
+    };
+    try {
+      await putVoiceCommand(putData);
+      const response = await getAllDivice();
+      dispatch(setDevicesInfomation(response.data));
+    } catch (error) {
+      console.log("Error handleCallVoiceAPI", error);
+    }
+  };
 
   return (
     <Tab.Navigator
