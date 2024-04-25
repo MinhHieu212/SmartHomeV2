@@ -1,19 +1,15 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import Slider from "@react-native-community/slider";
 import Icon from "react-native-vector-icons/Ionicons";
 import { setDevicesInfomation } from "../redux/deviceSlice/deviceSlice";
 import { getAllDivice, updateDeviceState } from "../apis/deviceAPI";
 
-const convertToHHMM = (dateTimeString) => {
-  const date = new Date(dateTimeString);
-  return date.toISOString().slice(11, 16);
+const displayVNTime = (value) => {
+  const existingStart = new Date(value);
+
+  existingStart.setHours(existingStart.getHours() + 7);
+
+  return existingStart.toISOString().slice(11, 16);
 };
 
 const ScheduleItem = ({ item, dispatch }) => {
@@ -51,29 +47,43 @@ const ScheduleItem = ({ item, dispatch }) => {
       <View className="flex-row w-full justify-start gap-2">
         <Text className="text-lg font-semibold ">From</Text>
         <Text className="border-2 border-blue-500 px-4 text-lg font-bold text-blue-600 rounded-md">
-          {convertToHHMM(item.start)}
+          {displayVNTime(item.start)}
         </Text>
 
         <Text className="text-lg font-semibold ">To</Text>
         <Text className="border-2 border-blue-500 mr-3 px-4 text-lg font-bold text-blue-600 rounded-md">
-          {convertToHHMM(item.end)}
+          {displayVNTime(item.end)}
         </Text>
       </View>
-      <View className="w-[100%]">
-        <Slider
-          style={{ width: "100%", height: 25 }}
-          minimumValue={1}
-          maximumValue={3}
-          minimumTrackTintColor="#2666DE"
-          maximumTrackTintColor="#D4E2FD"
-          thumbTintColor="#2666DE"
-          step={1}
-          value={item.level}
-        />
+      <View className="w-[100%]" pointerEvents="none">
         <View className="flex-row w-[90%] mx-auto mt-3 justify-between">
-          <Text className="text-md font-regular text-[#2666DE]">Level 1</Text>
-          <Text className="text-md font-regular text-[#2666DE]">Level 2</Text>
-          <Text className="text-md font-regular text-[#2666DE]">Level 3</Text>
+          <Text
+            className={`text-md  ${
+              item.level === 1
+                ? "text-white font-bold bg-blue-400 rounded-sm"
+                : "text-[#465675] font-regular"
+            }`}
+          >
+            Level 1
+          </Text>
+          <Text
+            className={`text-md  ${
+              item.level === 2
+                ? "text-white font-bold bg-blue-400 rounded-sm"
+                : "text-[#465675] font-regular"
+            }`}
+          >
+            Level 2
+          </Text>
+          <Text
+            className={`text-md  ${
+              item.level === 3
+                ? "text-white font-bold bg-blue-400 rounded-sm"
+                : "text-[#465675] font-regular"
+            }`}
+          >
+            Level 3
+          </Text>
         </View>
       </View>
     </View>

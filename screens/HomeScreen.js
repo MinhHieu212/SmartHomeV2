@@ -16,12 +16,12 @@ import { useNavigation } from "@react-navigation/native";
 import { getAllDivice } from "../apis/deviceAPI";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  selectTimeReLoad,
   setDevicesInfomation,
   setlectAllDevicesInfomation,
 } from "../redux/deviceSlice/deviceSlice.js";
 import DeviceItem from "../components/DeviceItem";
 import { getSensorRecord } from "../apis/sensorAPI";
-import { isEqual } from "lodash";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -32,6 +32,8 @@ const HomeScreen = () => {
   const [light, setLight] = useState(0);
 
   const AllDevicesInformation = useSelector(setlectAllDevicesInfomation);
+
+  const timeReLoad = useSelector(selectTimeReLoad);
 
   const handleGetAllSensorRecord = async () => {
     try {
@@ -55,10 +57,7 @@ const HomeScreen = () => {
   const handleGetAllDevices = async () => {
     try {
       const response = await getAllDivice();
-      let isDifferent = !isEqual(response.data, AllDevicesInformation);
-      if (isDifferent) {
-        dispatch(setDevicesInfomation(response.data));
-      }
+      dispatch(setDevicesInfomation(response.data));
     } catch (e) {
       console.log(`Error get all device ${e}`);
       e;
@@ -66,13 +65,18 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    handleGetAllDevices();
-
-    const intervalDevices = setInterval(handleGetAllDevices, 30000);
-    const intervalSensor = setInterval(handleGetAllSensorRecord, 60000);
+    const intervalDevices = setInterval(handleGetAllDevices, timeReLoad);
 
     return () => {
       clearInterval(intervalDevices);
+    };
+  }, [timeReLoad]);
+
+  useEffect(() => {
+    handleGetAllDevices();
+    const intervalSensor = setInterval(handleGetAllSensorRecord, 30000);
+
+    return () => {
       clearInterval(intervalSensor);
     };
   }, []);
