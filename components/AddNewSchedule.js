@@ -7,6 +7,14 @@ import { getAllDivice, updateDeviceState } from "../apis/deviceAPI";
 import { useDispatch } from "react-redux";
 import { setDevicesInfomation } from "../redux/deviceSlice/deviceSlice";
 
+const displayVNTime = (value) => {
+  const existingStart = new Date(value);
+
+  existingStart.setHours(existingStart.getHours() + 7);
+
+  return existingStart.toISOString().slice(11, 16);
+};
+
 const AddNewSchedule = ({ closeModal = () => {} }) => {
   const dispatch = useDispatch();
 
@@ -25,7 +33,7 @@ const AddNewSchedule = ({ closeModal = () => {} }) => {
       scheduleTime: [value],
     };
 
-    console.log(putData);
+    console.log(JSON.stringify(putData, null, 2));
 
     try {
       await updateDeviceState(putData);
@@ -39,23 +47,29 @@ const AddNewSchedule = ({ closeModal = () => {} }) => {
   };
 
   const handleFrom = (value) => {
-    const existingStart = new Date();
-    existingStart.setUTCHours(
-      (parseInt(value.toISOString().slice(11, 13)) + 8) % 24
-    );
-    existingStart.setUTCMinutes(parseInt(value.toISOString().slice(14, 16)));
-    const newStart = existingStart.toISOString();
-    setValue((prev) => ({ ...prev, start: newStart }));
+    const today = new Date();
+    const existingStart = new Date(value);
+
+    existingStart.setFullYear(today.getFullYear());
+
+    existingStart.setMonth(today.getMonth());
+
+    existingStart.setDate(today.getDate());
+
+    setValue((prev) => ({ ...prev, start: existingStart.toISOString() }));
   };
 
   const handleTo = (value) => {
-    const existingStart = new Date();
-    existingStart.setUTCHours(
-      (parseInt(value.toISOString().slice(11, 13)) + 8) % 24
-    );
-    existingStart.setUTCMinutes(parseInt(value.toISOString().slice(14, 16)));
-    const newStart = existingStart.toISOString();
-    setValue((prev) => ({ ...prev, end: newStart }));
+    const today = new Date();
+    const existingStart = new Date(value);
+
+    existingStart.setFullYear(today.getFullYear());
+
+    existingStart.setMonth(today.getMonth());
+
+    existingStart.setDate(today.getDate());
+
+    setValue((prev) => ({ ...prev, end: existingStart.toISOString() }));
   };
 
   const handleLevel = (value) => {
@@ -71,7 +85,7 @@ const AddNewSchedule = ({ closeModal = () => {} }) => {
           onPress={() => setShowFrom(true)}
         >
           <Text className="text-lg font-regular  text-[#2666DE]">
-            {value.start.slice(11, 16)}
+            {displayVNTime(value.start)}
           </Text>
           <Feather
             name="chevron-down"
@@ -100,7 +114,7 @@ const AddNewSchedule = ({ closeModal = () => {} }) => {
           onPress={() => setShowTo(true)}
         >
           <Text className="text-lg font-regular  text-[#2666DE]">
-            {value.end.slice(11, 16)}
+            {displayVNTime(value.end)}
           </Text>
           <Feather
             name="chevron-down"
