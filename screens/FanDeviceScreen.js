@@ -10,10 +10,9 @@ import {
   FlatList,
   Modal,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Feather from "react-native-vector-icons/Feather";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import Slider from "@react-native-community/slider";
 import { ScrollView } from "react-native-virtualized-view";
 import { updateDeviceState } from "../apis/deviceAPI";
@@ -22,48 +21,8 @@ import {
   setlectSingleDeviceInfomation,
   updateDevicesInfomation,
 } from "../redux/deviceSlice/deviceSlice";
+import AddNewSchedule from "../components/AddNewSchedule";
 import ScheduleItem from "../components/ScheduleItem";
-
-const convertToHHMM = (dateTimeString) => {
-  const date = new Date(dateTimeString);
-  const hours = date.getHours().toString().padStart(2, "0"); // Lấy giờ và thêm số 0 phía trước nếu cần
-  const minutes = date.getMinutes().toString().padStart(2, "0"); // Lấy phút và thêm số 0 phía trước nếu cần
-  return `${hours}:${minutes}`;
-};
-
-const ScheduleComponnent = ({ item }) => (
-  <View className="mx-4 my-2 p-2 pt-3 items-center justify-evenly shadow-2x bg-white shadow-zinc-600 rounded-lg">
-    <View className=" flex-row space-x-2">
-      <Text className="text-lg font-semibold ">From</Text>
-      <Text className="border-2 border-blue-500 px-4 text-lg font-bold text-blue-600 rounded-md">
-        {convertToHHMM(item.start)}
-      </Text>
-
-      <View className=" flex-row space-x-2"></View>
-      <Text className="text-lg font-semibold ">To</Text>
-      <Text className="border-2 border-blue-500 px-4 text-lg font-bold text-blue-600 rounded-md">
-        {convertToHHMM(item.start)}
-      </Text>
-    </View>
-    <View className="w-[100%]">
-      <Slider
-        style={{ width: "100%", height: 25 }}
-        minimumValue={1}
-        maximumValue={3}
-        minimumTrackTintColor="#2666DE"
-        maximumTrackTintColor="#D4E2FD"
-        thumbTintColor="#2666DE"
-        step={1}
-        value={item.level}
-      />
-      <View className="flex-row w-[90%] mt-3 justify-between">
-        <Text className="text-md font-regular text-[#2666DE]">Level 1</Text>
-        <Text className="text-md font-regular text-[#2666DE]">Level 2</Text>
-        <Text className="text-md font-regular text-[#2666DE]">Level 3</Text>
-      </View>
-    </View>
-  </View>
-);
 
 const FanDeviceScreen = () => {
   const dispatch = useDispatch();
@@ -218,14 +177,14 @@ const FanDeviceScreen = () => {
             <View className="flex-1 bg-black/[0.5] items-center justify-end">
               <View className="bg-white rounded-t-2xl justify-center items-center p-3">
                 {/* title */}
-                <Text className="text-lg font-bold text-[#2666DE] mb-3">
+                <Text className="text-2xl font-bold text-[#2666DE] mb-3">
                   Add new schedule
                 </Text>
                 {/* content */}
                 <View className="mb-5 flex-row items-center justify-between ">
-                  <ScheduleItem
+                  <AddNewSchedule
                     closeModal={() => setAddModalOpen(false)}
-                  ></ScheduleItem>
+                  ></AddNewSchedule>
                 </View>
               </View>
             </View>
@@ -324,7 +283,9 @@ const FanDeviceScreen = () => {
           <View className="rounded-md pb-10 ">
             <FlatList
               data={FanInformation.schedule}
-              renderItem={({ item }) => ScheduleComponnent({ item })}
+              renderItem={({ item }) =>
+                ScheduleItem({ item, dispatch: dispatch })
+              }
               keyExtractor={(item) => item._id}
             ></FlatList>
           </View>

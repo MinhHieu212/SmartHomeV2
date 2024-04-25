@@ -67,7 +67,7 @@ const HomeScreen = () => {
   useEffect(() => {
     handleGetAllDevices();
 
-    const intervalDevices = setInterval(handleGetAllDevices, 5000);
+    const intervalDevices = setInterval(handleGetAllDevices, 30000);
     const intervalSensor = setInterval(handleGetAllSensorRecord, 60000);
 
     return () => {

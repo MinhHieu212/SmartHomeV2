@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  message: "",
+  message: " Hold to Talk",
 };
 
 export const voiceSlice = createSlice({
