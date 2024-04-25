@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  timeReload: 5000,
   runningDevicesCount: 0,
   devicesInfomation: [
     {
@@ -84,6 +85,11 @@ export const deviceSlice = createSlice({
       state.devicesInfomation = updatedDevicesInfomation;
       state.runningDevicesCount = countDevicesRunning(state.devicesInfomation);
     },
+
+    setTimeReLoad: (state, action) => {
+      console.log("setTimeReLoad call in Redux", action.payload);
+      state.timeReload = action.payload;
+    },
   },
 });
 
@@ -91,13 +97,15 @@ export const deviceSlice = createSlice({
 export const setlectAllDevicesInfomation = (state) =>
   state.device.devicesInfomation;
 
+export const selectTimeReLoad = (state) => state.device.timeReload;
+
 export const setlectRunningDevicesCount = (state) =>
   state.device.runningDevicesCount;
 
 export const setlectSingleDeviceInfomation = (state, name) =>
   state.device.devicesInfomation.find((item) => item.name === name);
 
-export const { setDevicesInfomation, updateDevicesInfomation } =
+export const { setDevicesInfomation, updateDevicesInfomation, setTimeReLoad } =
   deviceSlice.actions;
 
 export default deviceSlice.reducer;
