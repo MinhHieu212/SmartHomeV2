@@ -22,7 +22,7 @@ const DashboardScreen = () => {
       value: 32,
       time: "0:00",
       label: "0:00",
-      labelTextStyle: { color: "#2666DE", width: 60 },
+      labelTextStyle: { color: "#2666DE", width: 60 },  
     },
     { value: 32, time: "1:00" },
     { value: 32, time: "2:00" },

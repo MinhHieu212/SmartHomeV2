@@ -6,132 +6,183 @@ import {
   StatusBar,
   ScrollView,
   Switch,
-  TouchableOpacity,
   Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { Picker } from "@react-native-picker/picker";
-import { getDoor } from "../apis/doorAPI";
 import { updateDeviceState } from "../apis/deviceAPI";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setlectSingleDeviceInfomation,
+  updateDevicesInfomation,
+} from "../redux/deviceSlice/deviceSlice";
+
+const numbers = Array.from({ length: 60 }, (_, index) => {
+  const unit = index > 1 ? " minutes" : " minute";
+  return (index + 1).toString() + unit;
+});
 
 const DoorDeviceScreen = () => {
-  const [notice, setNotice] = useState(true);
-  const [selectedMinute, setSelectedMinute] = useState("1 minute");
-  const numbers = Array.from({ length: 60 }, (_, index) => {
-    const unit = index > 1 ? " minutes" : " minute";
-    return (index + 1).toString() + unit;
-  });
-  const [doorOpen, setDoorOpen] = useState(false);
+  const dispatch = useDispatch();
+  const DoorInformation = useSelector((state) =>
+    setlectSingleDeviceInfomation(state, "Front Door")
+  );
 
-  const getDoorInfo = async () => {
-    try {
-      const doorInfo = await getDoor();
-      if (doorInfo) {
-        setDoorOpen(doorInfo.data[0].state);
-        setNotice(doorInfo.data[0].isAuto);
-        setSelectedMinute(
-          doorInfo.data[0].close_time.toString() +
-            (doorInfo.data[0].close_time > 1 ? " minutes" : " minute")
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const handleUpdateIsAuto = async () => {
+    const prevIsAuto = DoorInformation?.isAuto;
 
-  useEffect(() => {
-    getDoorInfo();
-  }, []);
+    dispatch(
+      updateDevicesInfomation({
+        name: DoorInformation?.name,
+        data: {
+          isAuto: !DoorInformation?.isAuto,
+        },
+      })
+    );
 
-  const handleUpdateNotice = async () => {
-    const prevState = notice;
-    setNotice(!notice);
     const putData = {
-      device_id: 2,
-      isAuto: !notice,
+      device_id: DoorInformation?.device_id,
+      isAuto: !prevIsAuto,
+      topic: DoorInformation?.topic,
     };
 
     try {
-      const res = await updateDeviceState(putData);
-      if (res) {
-        getDoorInfo();
-        console.log(res);
-      }
+      await updateDeviceState(putData);
     } catch (error) {
-      console.log(error);
-    }
-
-    if (prevState !== notice) {
-      getDoorInfo();
+      dispatch(
+        updateDevicesInfomation({
+          name: DoorInformation?.name,
+          data: {
+            isAuto: prevIsAuto,
+          },
+        })
+      );
+      console.error(`Error updating device is Auto: ${error}`);
     }
   };
 
   const handleUpdateSelectedMinute = async (itemValue) => {
-    console.log(itemValue);
-    setSelectedMinute(itemValue);
+    const prevCloseTime = DoorInformation?.close_time;
+
+    dispatch(
+      updateDevicesInfomation({
+        name: DoorInformation?.name,
+        data: {
+          close_time: itemValue.split(" ")[0],
+        },
+      })
+    );
+
     const putData = {
-      device_id: 2,
+      device_id: DoorInformation?.device_id,
       close_time: parseInt(itemValue.split(" ")[0]),
     };
+
     try {
-      const res = await updateDeviceState(putData);
-      if (res) {
-        getDoorInfo();
-        console.log(res);
-      }
+      await updateDeviceState(putData);
     } catch (error) {
-      console.log(error);
+      dispatch(
+        updateDevicesInfomation({
+          name: DoorInformation?.name,
+          data: {
+            close_time: prevCloseTime,
+          },
+        })
+      );
     }
   };
 
   const handleOpenDoor = async () => {
-    setDoorOpen(!doorOpen);
+    const prevState = DoorInformation?.state;
+
+    dispatch(
+      updateDevicesInfomation({
+        name: DoorInformation?.name,
+        data: {
+          state: !DoorInformation?.state,
+        },
+      })
+    );
+
     const putData = {
-      device_id: 2,
-      state: 1,
+      device_id: DoorInformation?.device_id,
+      state: Number(!prevState),
+      topic: DoorInformation?.topic,
     };
+
     try {
-      const res = await updateDeviceState(putData);
-      if (res) {
-        getDoorInfo();
-        console.log(res);
-      }
+      await updateDeviceState(putData);
     } catch (error) {
-      console.log(error);
+      dispatch(
+        updateDevicesInfomation({
+          name: DoorInformation?.name,
+          data: {
+            state: prevState,
+          },
+        })
+      );
+      console.error(`Error updating device state: ${error}`);
     }
   };
+
   return (
     <SafeAreaView className="flex-1 bg-[#EEF5FF] mb-[70]">
       <StatusBar barStyle={"opaque"} backgroundColor="black"></StatusBar>
       <Header name="Front Door"></Header>
       <ScrollView>
+        {/* manual control */}
+        <View className={`m-3`}>
+          <Text className="text-lg font-regular mx-2 text-[#6F7EA8]">
+            Manual Control
+          </Text>
+          <View className="flex-row items-center mt-5 justify-between rounded-2xl shadow-2x h-[70] bg-white p-3">
+            <View className="flex-row">
+              <Image
+                source={require("../assets/icon-park-solid_door-handle.png")}
+                className="w-5 h-7"
+              ></Image>
+              <Text className="text-lg ml-3 font-bold text-[#2666DE]">
+                Open the door
+              </Text>
+            </View>
+            <Switch
+              trackColor={{ false: "#D4E2FD", true: "#2666DE" }}
+              thumbColor={"#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              value={DoorInformation?.state}
+              onValueChange={handleOpenDoor}
+              style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
+            />
+          </View>
+        </View>
+        <Text className="text-lg font-regular mx-2 my-1 text-[#6F7EA8] px-3">
+          Auto Mode Config
+        </Text>
         <View className="flex-row items-center justify-between rounded-2xl shadow-2x h-[50] bg-[#8AAEEF] mx-3 my-5 p-3">
           <Text className="text-lg font-bold text-[#2666DE]">Auto Mode</Text>
           <Switch
             trackColor={{ false: "#D4E2FD", true: "#2666DE" }}
             thumbColor={"#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={handleUpdateNotice}
-            value={notice}
+            value={DoorInformation?.isAuto}
+            onValueChange={handleUpdateIsAuto}
             style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
           />
         </View>
         {/* auto mode */}
-
         {/* auto mode control */}
-        <View
-          className={`m-3 ${!notice ? "opacity-50" : ""}`}
-          pointerEvents={!notice ? "none" : "auto"}
-        >
-          <Text className="text-lg font-regular mx-2 my-1 text-[#6F7EA8]">
-            Auto Mode Config
-          </Text>
+        <View className={`m-3 ${DoorInformation?.isAuto ? "" : "opacity-50"}`}>
           <View className="flex-row items-center justify-between rounded-2xl shadow-2x h-[70] bg-white p-3">
             <Text className="text-lg font-regular">Close door after</Text>
-            <View className="w-[50%] justify-center h-[40] border-2 rounded-xl border-[#2666DE] p-0 m-0">
+            <View
+              className={`w-[50%] justify-center h-[40] border-2 rounded-xl border-[#2666DE] p-0 m-0`}
+            >
               <Picker
-                selectedValue={selectedMinute}
+                selectedValue={
+                  DoorInformation.close_time.toString() +
+                  (DoorInformation.close_time > 1 ? " minutes" : " minute")
+                }
                 onValueChange={(itemValue, itemIndex) =>
                   handleUpdateSelectedMinute(itemValue)
                 }
@@ -145,37 +196,6 @@ const DoorDeviceScreen = () => {
                 ))}
               </Picker>
             </View>
-          </View>
-        </View>
-
-        {/* manual control */}
-
-        <View
-          className={`m-3 ${notice ? "opacity-50" : ""}`}
-          pointerEvents={notice ? "none" : "auto"}
-        >
-          <Text className="text-lg font-regular mx-2 my-1 text-[#6F7EA8]">
-            Manual Control
-          </Text>
-          <View className="flex-row items-center justify-between rounded-2xl shadow-2x h-[70] bg-white p-3">
-            <View className="flex-row">
-              <Image
-                source={require("../assets/icon-park-solid_door-handle.png")}
-                className="w-5 h-7"
-              ></Image>
-              <Text className="text-lg font-bold text-[#2666DE]">
-                {" "}
-                Open the door
-              </Text>
-            </View>
-            <Switch
-              trackColor={{ false: "#D4E2FD", true: "#2666DE" }}
-              thumbColor={"#f4f3f4"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={handleOpenDoor}
-              value={doorOpen}
-              style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
-            />
           </View>
         </View>
       </ScrollView>
