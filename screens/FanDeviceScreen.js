@@ -18,6 +18,7 @@ import { ScrollView } from "react-native-virtualized-view";
 import { updateDeviceState } from "../apis/deviceAPI";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setTimeReLoad,
   setlectSingleDeviceInfomation,
   updateDevicesInfomation,
 } from "../redux/deviceSlice/deviceSlice";
@@ -32,6 +33,7 @@ const FanDeviceScreen = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [currentLevel, setCurrentLevel] = useState(FanInformation?.level);
 
   const handleUpdateAutoMode = async () => {
     const prevIsAuto = FanInformation?.isAuto;
@@ -43,10 +45,12 @@ const FanDeviceScreen = () => {
         },
       })
     );
+
     const putData = {
       device_id: FanInformation?.device_id,
       isAuto: !prevIsAuto,
     };
+
     try {
       await updateDeviceState(putData);
     } catch (error) {
@@ -171,7 +175,8 @@ const FanDeviceScreen = () => {
             transparent={true}
             visible={addModalOpen}
             onRequestClose={() => {
-              setAddModalOpen(!addModalOpen);
+              setAddModalOpen(addModalOpen);
+              dispatch(setTimeReLoad(5000));
             }}
           >
             <View className="flex-1 bg-black/[0.5] items-center justify-end">
@@ -183,7 +188,10 @@ const FanDeviceScreen = () => {
                 {/* content */}
                 <View className="mb-5 flex-row items-center justify-between ">
                   <AddNewSchedule
-                    closeModal={() => setAddModalOpen(false)}
+                    closeModal={() => {
+                      setAddModalOpen(false);
+                      dispatch(setTimeReLoad(5000));
+                    }}
                   ></AddNewSchedule>
                 </View>
               </View>
@@ -233,13 +241,31 @@ const FanDeviceScreen = () => {
                 onValueChange={(value) => handleUpdateLevel(value)}
               />
               <View className="flex-row w-[100%] justify-between">
-                <Text className="text-md font-regular text-[#2666DE]">
+                <Text
+                  className={`text-lg px-2 ${
+                    FanInformation?.level === 1
+                      ? "text-white font-bold bg-blue-400 rounded-md"
+                      : "text-[#465675] font-regular"
+                  }`}
+                >
                   Level 1
                 </Text>
-                <Text className="text-md font-regular text-[#2666DE]">
+                <Text
+                  className={`text-lg px-2 ${
+                    FanInformation?.level === 2
+                      ? "text-white font-bold bg-blue-400 rounded-md"
+                      : "text-[#465675] font-regular"
+                  }`}
+                >
                   Level 2
                 </Text>
-                <Text className="text-md font-regular text-[#2666DE]">
+                <Text
+                  className={`text-lg px-2 ${
+                    FanInformation?.level === 3
+                      ? "text-white font-bold bg-blue-400 rounded-md"
+                      : "text-[#465675] font-regular"
+                  }`}
+                >
                   Level 3
                 </Text>
               </View>
@@ -247,7 +273,7 @@ const FanDeviceScreen = () => {
           </View>
         </View>
         <View className="px-3 items-center flex-row mt-5 justify-between mr-4">
-          <Text className="text-lg font-regular   my-1 text-[#6F7EA8] px-3">
+          <Text className="text-lg font-regular my-1 text-[#6F7EA8] px-3">
             Schedule Mode
           </Text>
           <TouchableOpacity onPress={() => setModalOpen(true)}>
@@ -270,8 +296,16 @@ const FanDeviceScreen = () => {
             <Text className="text-lg font-regular mx-2 my-1 text-[#6F7EA8]">
               Schedule
             </Text>
-            <View className="px-3">
-              <TouchableOpacity onPress={() => setAddModalOpen(true)}>
+            <View
+              pointerEvents={!FanInformation.isAuto ? "none" : "auto"}
+              className={`px-3 ${!FanInformation.isAuto ? "opacity-50" : ""}`}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setAddModalOpen(true);
+                  dispatch(setTimeReLoad(60000));
+                }}
+              >
                 <Feather
                   name="plus"
                   className="text-[#2666DE]"
@@ -280,7 +314,12 @@ const FanDeviceScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <View className="rounded-md pb-10 ">
+          <View
+            pointerEvents={!FanInformation.isAuto ? "none" : "auto"}
+            className={`rounded-md pb-10 ${
+              !FanInformation.isAuto ? "opacity-50" : ""
+            }`}
+          >
             <FlatList
               data={FanInformation.schedule}
               renderItem={({ item }) =>
