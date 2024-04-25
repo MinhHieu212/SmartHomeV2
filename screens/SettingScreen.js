@@ -12,6 +12,7 @@ import Header from "../components/Header";
 import { RightArrow } from "../assets/Icons";
 import { StatusBar } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import LottieView from "lottie-react-native";
 
 const SettingScreen = () => {
   const { logout } = useContext(AuthContext);
