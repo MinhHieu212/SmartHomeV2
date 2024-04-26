@@ -35,44 +35,7 @@ const DashBoard = ({ data, name, unit }) => {
           yAxisSide="right"
           xAxisColor="#2666DE"
           xAxisLength={350}
-          pointerConfig={{
-            pointerStripHeight: 160,
-            pointerStripColor: "#2666DE",
-            pointerStripWidth: 2,
-            pointerColor: "#2666DE",
-            radius: 6,
-            pointerLabelWidth: 100,
-            pointerLabelHeight: 90,
-            autoAdjustPointerLabelPosition: false,
-            pointerLabelComponent: (items) => {
-              return (
-                <View
-                  style={{
-                    height: 90,
-                    width: 100,
-                    justifyContent: "center",
-                    marginTop: 30,
-                    marginLeft: -40,
-                  }}
-                >
-                  <View
-                    style={{
-                      paddingHorizontal: 14,
-                      paddingVertical: 6,
-                      borderRadius: 16,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Text style={{ fontWeight: "bold", textAlign: "center" }}>
-                      {items[0].value + unit}
-                      {"\n"}
-                      {items[0].time}
-                    </Text>
-                  </View>
-                </View>
-              );
-            },
-          }}
+          
         />
       </View>
     </View>
