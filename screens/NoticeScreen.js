@@ -10,8 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { err } from "react-native-svg";
 import { getNotifications } from "../apis/noticeAPI";
+import { selectNewNotice } from "../redux/notificationSlice/notificationSlice";
+import { useSelector } from "react-redux";
 
 const displayVNTime = (value) => {
   const existingStart = new Date(value);
@@ -28,11 +29,11 @@ const displayVNTime = (value) => {
 
 const NoticeScreen = () => {
   const [notificationList, setNotificationList] = useState([]);
+  const newNotice = useSelector(selectNewNotice);
 
   const callAPI = async () => {
     try {
       const responce = await getNotifications();
-
       setNotificationList(responce.data);
     } catch (error) {
       console.log(error);
@@ -48,6 +49,10 @@ const NoticeScreen = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    callAPI();
+  }, [newNotice]);
 
   const notificationItem = ({ item }) => {
     return (

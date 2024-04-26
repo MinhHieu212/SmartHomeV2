@@ -15,7 +15,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +28,9 @@
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.minhhieu8112003.smarthome"
+      "package": "com.minhhieu8112003.smarthome",
+      "googleServicesFile": "./android/app/google-services.json",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,6 +43,14 @@
           "speechRecognitionPermission": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2f61f04e-cfaf-41ba-bf9d-7b30596bf230"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/2f61f04e-cfaf-41ba-bf9d-7b30596bf230"
+    }
   }
 }
