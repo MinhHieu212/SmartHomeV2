@@ -59,7 +59,8 @@ const userList = [
   },
   {
     name: "User 15",
-  },]
+  },
+];
 
 const UserListScreen = () => {
   const [username, setUsername] = useState("");
@@ -90,19 +91,24 @@ const UserListScreen = () => {
             <Text className="text-xl font-bold w-full border-[#8391A1] border-b-2 pb-2">
               User List
             </Text>
-            
-            {
-              userList.map((item) => (
-                <TouchableOpacity key={item.name} onPress={() => navigation.navigate("UserDashBoard", { userName :  item.name})}>
-                  <View className="flex flex-row border-b-2 items-center justify-between shadow-2x h-16 border-[#8391A1] bg-white">
-                  <Text >
-                    {item.name}
-                  </Text>
-                  <Feather name="chevron-right" size={24} color="#8391A1"></Feather>
+
+            {userList.map((item) => (
+              <TouchableOpacity
+                key={item.name}
+                onPress={() =>
+                  navigation.navigate("UserDashBoard", { userName: item.name })
+                }
+              >
+                <View className="flex flex-row border-b-2 items-center justify-between shadow-2x h-16 border-[#8391A1] bg-white">
+                  <Text>{item.name}</Text>
+                  <Feather
+                    name="chevron-right"
+                    size={24}
+                    color="#8391A1"
+                  ></Feather>
                 </View>
-                </TouchableOpacity>
-              ))
-            }
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
       </ScrollView>

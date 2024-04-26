@@ -16,6 +16,9 @@ const UserDashboardScreen = ({ route }) => {
   const [device, setDevice] = useState([]);
   const [predictedData, setPredictedData] = useState([]);
   const [realData, setRealData] = useState([]);
+  const [lowest, setLowest] = useState(0);
+  const [highest, setHighest] = useState(0);
+  const [average, setAverage] = useState(0);
 
   const [predictHumidity, setPredictHumidity] = useState([]);
   const [realHumidity, setRealHumidity] = useState([]);
@@ -52,6 +55,9 @@ const UserDashboardScreen = ({ route }) => {
         <UserDashBoard
           predictedData={predictedData}
           realData={realData}
+          lowest={lowest}
+          highest={highest}
+          average={average}
           name="Temperature"
           unit="°C"
           upperBound={60}
