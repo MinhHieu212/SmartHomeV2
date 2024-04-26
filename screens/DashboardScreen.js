@@ -14,14 +14,19 @@ import { getDashboard } from "../apis/dashboardAPI";
 const DashboardScreen = () => {
 
   const [temperature, setTemperature] = useState([]);
-
+  const [humidity, setHumidity] = useState([]);
   useEffect(() => {
     const getTemperature = async () => {
-      const temperatureData = await getDashboard();
+      const temperatureData = await getDashboard("temperature");
       setTemperature(temperatureData.data.realData);
       // setHumidity(temperatureData.data.humidity);
     }
     getTemperature();
+    const getHumidity = async () => {
+      const humidityData = await getDashboard("humidity");
+      setHumidity(humidityData.data.realData);
+    }
+    getHumidity();
   }, []);
 
   const hour = new Date().getHours();
@@ -36,8 +41,9 @@ const DashboardScreen = () => {
         color: "#2666DE",
         width: 60,
       };
-      const hour = new Date().getHours();
+      
     }
+    const hour = new Date().getHours();
     temperature.map((data) => {
       if (extractHourFromTime(data.time) == hour) {
         data["label"] = "now";
@@ -50,15 +56,16 @@ const DashboardScreen = () => {
 
   };
   addLabels(temperature);
+  addLabels(humidity);
   const filteredRealData= temperature.filter((data) => extractHourFromTime(data.time) <= hour);
-
+  const filterHumidity= humidity.filter((data) => extractHourFromTime(data.time) <= hour);
   return (
     <SafeAreaView className="flex-1 bg-[#EEF5FF] mb-[70]">
       <StatusBar barStyle={"opaque"} backgroundColor="black"></StatusBar>
       <Header name="Dashboard"></Header>
       <ScrollView>
-        <DashBoard data={filteredRealData} name="Temperature" unit="°C"></DashBoard>
-        <DashBoard data={filteredRealData} name="Humidity" unit="%"></DashBoard>
+        <DashBoard data={filteredRealData} name="Temperature" unit="°C" upperBound={60}></DashBoard>
+        <DashBoard data={filterHumidity} name="Humidity" unit="%" upperBound={100}></DashBoard>
         {/* <DashBoard data={temperature} name="Lighting" unit="cd"></DashBoard> */}
       </ScrollView>
     </SafeAreaView>

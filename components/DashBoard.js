@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { LineChart } from "react-native-gifted-charts";
 
-const DashBoard = ({ data, name, unit }) => {
+const DashBoard = ({ data, name, unit, upperBound }) => {
   return (
     <View className="m-2 items-center">
       <Text className="text-2xl font-bold my-5">{name}</Text>
@@ -24,7 +24,7 @@ const DashBoard = ({ data, name, unit }) => {
           endOpacity={0.2}
           initialSpacing={0}
           noOfSections={6}
-          maxValue={60}
+          maxValue={upperBound}
           yAxisColor="#2666DE"
           curved
           yAxisThickness={0}
