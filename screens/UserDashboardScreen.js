@@ -20,6 +20,9 @@ const UserDashboardScreen = ({ route }) => {
   const [highest, setHighest] = useState(0);
   const [average, setAverage] = useState(0);
 
+  const [predictHumidity, setPredictHumidity] = useState([]);
+  const [realHumidity, setRealHumidity] = useState([]);
+
   useEffect(() => {
     const getDevices = async () => {
       const deviceData = await getAllDivice();
@@ -28,14 +31,18 @@ const UserDashboardScreen = ({ route }) => {
     getDevices();
 
     const getPredictedData = async () => {
-      const predictedData = await getDashboard();
+      const predictedData = await getDashboard("temperature");
       setPredictedData(predictedData.data.predictedData);
       setRealData(predictedData.data.realData);
-      setLowest(predictedData.data.lowest);
-      setHighest(predictedData.data.highest);
-      setAverage(predictedData.data.average);
     };
     getPredictedData();
+    const getHumidityData = async () => {
+      const humidityData = await getDashboard("humidity");
+      setPredictHumidity(humidityData.data.predictedData);
+      setRealHumidity(humidityData.data.realData);
+      console.log(humidityData);
+    };
+    getHumidityData();
   }, []);
 
   const { userName } = route.params;
@@ -53,6 +60,15 @@ const UserDashboardScreen = ({ route }) => {
           average={average}
           name="Temperature"
           unit="°C"
+          upperBound={60}
+        ></UserDashBoard>
+
+        <UserDashBoard
+          predictedData={predictHumidity}
+          realData={realHumidity}
+          name="Humidity"
+          unit="%"
+          upperBound={100}
         ></UserDashBoard>
         <View>
           <Text className="text-2xl mb-5 font-bold m-3">Devices</Text>
