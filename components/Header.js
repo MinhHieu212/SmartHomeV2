@@ -32,11 +32,11 @@ const Header = ({ name }) => {
         </View>
       </View>
 
-      <View className="w-[50] h-[50] items-center justify-center rounded-full">
-        <TouchableOpacity onPress={() => navigation.navigate("Notice")}>
-          <Feather name="bell" color={"black"} size={26} />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={() => navigation.navigate("Notice")}>
+        <View className="w-[50] h-[50] items-center justify-center ">
+          <Feather name="bell" color={"black"} size={30} />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };

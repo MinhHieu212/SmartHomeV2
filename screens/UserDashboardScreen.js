@@ -12,16 +12,13 @@ import UserDashBoard from "../components/UserDashBoard";
 import { getAllDivice } from "../apis/deviceAPI";
 import { getDashboard } from "../apis/dashboardAPI";
 
-
 const UserDashboardScreen = ({ route }) => {
-
   const [device, setDevice] = useState([]);
   const [predictedData, setPredictedData] = useState([]);
   const [realData, setRealData] = useState([]);
   const [lowest, setLowest] = useState(0);
   const [highest, setHighest] = useState(0);
   const [average, setAverage] = useState(0);
-  
 
   useEffect(() => {
     const getDevices = async () => {
@@ -39,10 +36,7 @@ const UserDashboardScreen = ({ route }) => {
       setAverage(predictedData.data.average);
     };
     getPredictedData();
-
   }, []);
-
-
 
   const { userName } = route.params;
 
@@ -51,10 +45,9 @@ const UserDashboardScreen = ({ route }) => {
       <StatusBar barStyle={"opaque"} backgroundColor="black"></StatusBar>
       <Header name={userName}></Header>
       <ScrollView>
-      <UserDashBoard
+        <UserDashBoard
           predictedData={predictedData}
           realData={realData}
-          
           lowest={lowest}
           highest={highest}
           average={average}

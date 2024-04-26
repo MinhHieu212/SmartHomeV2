@@ -48,7 +48,7 @@ const FanDeviceScreen = () => {
 
     const putData = {
       device_id: FanInformation?.device_id,
-      isAuto: !prevIsAuto,
+      isAuto: Number(!prevIsAuto),
     };
 
     try {
@@ -75,10 +75,12 @@ const FanDeviceScreen = () => {
         },
       })
     );
+
     const putData = {
       device_id: FanInformation?.device_id,
       level: level,
     };
+
     try {
       await updateDeviceState(putData);
     } catch (error) {
@@ -103,10 +105,12 @@ const FanDeviceScreen = () => {
         },
       })
     );
+
     const putData = {
       device_id: FanInformation?.device_id,
-      state: !prevState,
+      state: Number(!prevState),
     };
+
     try {
       await updateDeviceState(putData);
     } catch (error) {

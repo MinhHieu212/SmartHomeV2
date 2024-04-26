@@ -10,7 +10,13 @@ export default function AppNavigation() {
 
   return (
     <NavigationContainer>
-      {token == null ? <AuthStack /> : token.includes("admin") ? <AdminTab /> : <UserTab />}
+      {token == null ? (
+        <AuthStack />
+      ) : token.includes("admin") ? (
+        <AdminTab />
+      ) : (
+        <UserTab />
+      )}
     </NavigationContainer>
   );
 }
