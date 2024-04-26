@@ -43,7 +43,7 @@ const DoorDeviceScreen = () => {
 
     const putData = {
       device_id: DoorInformation?.device_id,
-      isAuto: !prevIsAuto,
+      isAuto: Number(!prevIsAuto),
       topic: DoorInformation?.topic,
     };
 

@@ -8,6 +8,7 @@ import { setlectRunningDevicesCount } from "../redux/deviceSlice/deviceSlice";
 const Header = ({ name }) => {
   const navigation = useNavigation();
   const runningDevicesCount = useSelector(setlectRunningDevicesCount);
+
   return (
     <View className="w-full h-[10vh] bg-white shadow-lg pt-1 shadow-blue-900 rounded-2xl items-center flex-row justify-between px-4">
       <View className="w-[50] h-[50] items-center justify-center rounded-full">
@@ -32,11 +33,11 @@ const Header = ({ name }) => {
         </View>
       </View>
 
-      <View className="w-[50] h-[50] items-center justify-center rounded-full">
-        <TouchableOpacity onPress={() => navigation.navigate("Notice")}>
-          <Feather name="bell" color={"black"} size={26} />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={() => navigation.navigate("Notice")}>
+        <View className="w-[50] h-[50] items-center justify-center ">
+          <Feather name="bell" color={"black"} size={30} />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };

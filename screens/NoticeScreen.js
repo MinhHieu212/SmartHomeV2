@@ -7,71 +7,68 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { getNotifications } from "../apis/noticeAPI";
+import { selectNewNotice } from "../redux/notificationSlice/notificationSlice";
+import { useSelector } from "react-redux";
+
+const displayVNTime = (value) => {
+  const existingStart = new Date(value);
+
+  existingStart.setHours(existingStart.getHours() + 7);
+
+  return (
+    "Time: " +
+    existingStart.toISOString().slice(11, 16) +
+    ", Date " +
+    existingStart.toISOString().slice(0, 10)
+  );
+};
 
 const NoticeScreen = () => {
-  const notificationList = [
-    {
-      key: 1,
-      date: "2024-03-29",
-      content: "The room's humidity exceeds",
-    },
-    {
-      key: 2,
-      date: "2022-03-29",
-      content: "The room's humidity exceeds",
-    },
-    {
-      key: 3,
-      date: "2021-03-29",
-      content: "The room's humidity exceeds",
-    },
-    {
-      key: 31,
-      date: "2024-03-29",
-      content: "The room's humidity exceeds",
-    },
-    {
-      key: 4,
-      date: "2022-03-29",
-      content: "The room's humidity exceeds",
-    },
-    {
-      key: 5,
-      date: "2021-03-29",
-      content: "The room's humidity exceeds",
-    },
-    {
-      key: 6,
-      date: "2024-03-29",
-      content: "The room's humidity exceeds",
-    },
-    {
-      key: 7,
-      date: "2022-03-29",
-      content: "The room's humidity exceeds",
-    },
-    {
-      key: 8,
-      date: "2021-03-29",
-      content: "The room's humidity exceeds",
-    },
-  ];
+  const [notificationList, setNotificationList] = useState([]);
+  const newNotice = useSelector(selectNewNotice);
+
+  const callAPI = async () => {
+    try {
+      const responce = await getNotifications();
+      setNotificationList(responce.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    callAPI();
+
+    intervalId = setInterval(callAPI, 180000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  useEffect(() => {
+    callAPI();
+  }, [newNotice]);
 
   const notificationItem = ({ item }) => {
     return (
-      <View className="w-[90vw] bg-white shadow-lg shadow-black flex-row items-center justify-between rounded-2xl p-2 px-4 m-2">
+      <View className="w-[95vw] bg-white shadow-lg shadow-slate-500 flex-row items-center justify-between rounded-2xl p-2 my-2">
         <View className="p-2 shadow-xl shadow-black rounded-full bg-white">
-          <Ionicons name={"water-outline"} color={"red"} size={35} />
+          <Ionicons name={"water-outline"} color={"red"} size={20} />
         </View>
-        <View className="w-[82%]">
-          <Text className="p-1 text-red-500 font-bold text-lg overflow-hidden h-8 truncate">
-            {item.content}
+        <View className="w-[90%] ml-1">
+          <Text
+            className="p-1 text-red-600 font-bold overflow-hidden h-8 truncate"
+            style={styles.textSize}
+          >
+            {item?.description}
           </Text>
           <Text className="p-1 text-md font-bold text-blue-800">
-            {item.date}
+            {displayVNTime(item?.updatedAt)}
           </Text>
         </View>
       </View>
@@ -83,11 +80,11 @@ const NoticeScreen = () => {
       <StatusBar barStyle={"opaque"} backgroundColor="black"></StatusBar>
       <Header name="Notice"></Header>
       {/* <ScrollView className="mt-1 h-[80vh]"> */}
-      <View className="h-[80vh] pb-10 px-3 mt-2 items-center justify-center">
+      <View className="h-[80vh] pb-10 mt-2 items-center justify-center">
         <FlatList
           data={notificationList}
           renderItem={notificationItem}
-          keyExtractor={(item) => item.key}
+          keyExtractor={(item) => item._id}
         ></FlatList>
       </View>
       {/* </ScrollView> */}
@@ -97,4 +94,8 @@ const NoticeScreen = () => {
 
 export default NoticeScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  textSize: {
+    fontSize: 18,
+  },
+});
