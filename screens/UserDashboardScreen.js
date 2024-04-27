@@ -11,17 +11,22 @@ import Header from "../components/Header";
 import UserDashBoard from "../components/UserDashBoard";
 import { getAllDivice } from "../apis/deviceAPI";
 import { getDashboard } from "../apis/dashboardAPI";
+import { fakeData } from "../assets/fakeData";
 
 const UserDashboardScreen = ({ route }) => {
   const [device, setDevice] = useState([]);
-  const [predictedData, setPredictedData] = useState([]);
-  const [realData, setRealData] = useState([]);
+  const [predictedData, setPredictedData] = useState(
+    fakeData.data.predictedData
+  );
+  const [realData, setRealData] = useState(fakeData.data.realData);
   const [lowest, setLowest] = useState(0);
   const [highest, setHighest] = useState(0);
   const [average, setAverage] = useState(0);
 
-  const [predictHumidity, setPredictHumidity] = useState([]);
-  const [realHumidity, setRealHumidity] = useState([]);
+  const [predictHumidity, setPredictHumidity] = useState(
+    fakeData.data.predictedData
+  );
+  const [realHumidity, setRealHumidity] = useState(fakeData.data.realData);
 
   useEffect(() => {
     const getDevices = async () => {
@@ -40,7 +45,6 @@ const UserDashboardScreen = ({ route }) => {
       const humidityData = await getDashboard("humidity");
       setPredictHumidity(humidityData.data.predictedData);
       setRealHumidity(humidityData.data.realData);
-      console.log(humidityData);
     };
     getHumidityData();
   }, []);
@@ -51,7 +55,7 @@ const UserDashboardScreen = ({ route }) => {
     <SafeAreaView className="flex-1 bg-[#EEF5FF] mb-[70]">
       <StatusBar barStyle={"opaque"} backgroundColor="black"></StatusBar>
       <Header name={userName}></Header>
-      <ScrollView>
+      <ScrollView className="mt-3">
         <UserDashBoard
           predictedData={predictedData}
           realData={realData}
@@ -62,7 +66,6 @@ const UserDashboardScreen = ({ route }) => {
           unit="°C"
           upperBound={60}
         ></UserDashBoard>
-
         <UserDashBoard
           predictedData={predictHumidity}
           realData={realHumidity}
@@ -70,6 +73,7 @@ const UserDashboardScreen = ({ route }) => {
           unit="%"
           upperBound={100}
         ></UserDashBoard>
+
         <View>
           <Text className="text-2xl mb-5 font-bold m-3">Devices</Text>
           <View className="bg-white m-auto mb-10 rounded-3xl flex-1 p-3 w-[95vw] justify-center">

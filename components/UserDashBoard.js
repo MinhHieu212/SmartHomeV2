@@ -3,7 +3,6 @@ import React from "react";
 import { LineChart } from "react-native-gifted-charts";
 
 const UserDashBoard = ({ predictedData, realData, name, unit, upperBound }) => {
-
   const hour = new Date().getHours();
   const extractHourFromTime = (time) => {
     const [hour, _] = time.split(":");
@@ -25,21 +24,22 @@ const UserDashBoard = ({ predictedData, realData, name, unit, upperBound }) => {
           color: "red",
           width: 60,
         };
-        
       }
-    })
-
+    });
   };
   addLabels(predictedData);
-  
-  const filteredRealData= realData.filter((data) => extractHourFromTime(data.time) <= hour);
-  const realValues = filteredRealData.map(data => data.value);
+
+  const filteredRealData = realData.filter(
+    (data) => extractHourFromTime(data.time) <= hour
+  );
+  const realValues = filteredRealData.map((data) => data.value);
   const lowestRealValue = Math.min(...realValues);
   const highestRealValue = Math.max(...realValues);
-  const averageRealValue = realValues.reduce((sum, value) => sum + value, 0) / realValues.length;
-  
+  const averageRealValue =
+    realValues.reduce((sum, value) => sum + value, 0) / realValues.length;
+
   return (
-    <View className="">
+    <View className="h-[65vh]">
       <Text className="text-2xl font-bold m-3">{name}</Text>
       <View className="bg-white m-auto rounded-3xl flex-1 p-3 w-[95vw] justify-center ">
         <LineChart
@@ -106,7 +106,9 @@ const UserDashBoard = ({ predictedData, realData, name, unit, upperBound }) => {
           <View className="flex-row items-center justify-between">
             <Text>Average Real Temperature:</Text>
             <Text>
-              {averageRealValue.toPrecision(4) ? averageRealValue.toPrecision(4) : 0}
+              {averageRealValue.toPrecision(4)
+                ? averageRealValue.toPrecision(4)
+                : 0}
               {unit}
             </Text>
           </View>
