@@ -61,7 +61,7 @@ const SettingScreen = () => {
           </View>
         </View>
         <Text className="text-xl font-bold mb-3">Notification</Text>
-        <View className="m-3 my-2 gap-y-1 ">
+        <View className="m-3 my-2 gap-y-3 mb-4">
           <View className="flex-row items-center justify-between">
             <Text className="text-lg font-medium text-[#6F7EA8]">
               Allow notification

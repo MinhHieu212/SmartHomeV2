@@ -9,21 +9,24 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import HistoryCard from "../components/HistoryCard";
 import { getHistory } from "../apis/historyAPI";
+import { useSelector } from "react-redux";
+import { setlectRunningDevicesCount } from "../redux/deviceSlice/deviceSlice";
 
 const HistoryScreen = () => {
   const [history, setHistory] = useState([]);
+  const render = useSelector(setlectRunningDevicesCount);
 
   useEffect(() => {
     const getHistoryy = async () => {
       const historyData = await getHistory();
       setHistory(historyData.data);
-    //   console.log(history);
+      //   console.log(history);
     };
     getHistoryy();
-  }, []);
+  }, [render]);
+
   return (
     <SafeAreaView className="flex-1 bg-white mb-[70]">
       <StatusBar barStyle={"opaque"} backgroundColor="black"></StatusBar>

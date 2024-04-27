@@ -91,7 +91,7 @@ const HomeScreen = () => {
           <View className="flex-row items-center justify-between">
             <Text className="text-xl font-bold">Dashboard</Text>
             <TouchableOpacity onPress={() => navigation.navigate("Dashboard")}>
-              <Text className="text-md mr-2 text-blue-500 font-semibold">
+              <Text className="text-lg mr-2 text-blue-500 font-semibold">
                 Details
               </Text>
             </TouchableOpacity>
@@ -142,15 +142,15 @@ const HomeScreen = () => {
           </View>
 
           {/* Devices */}
-          <View className="flex-row items-center justify-between mt-2">
+          <View className="flex-row items-center justify-between mt-4">
             <Text className="text-xl font-bold">Devices</Text>
             <TouchableOpacity onPress={() => navigation.navigate("History")}>
-              <Text className="text-md mr-2 text-blue-500 font-semibold">
+              <Text className="text-lg mr-2 text-blue-500 font-semibold">
                 History
               </Text>
             </TouchableOpacity>
           </View>
-          
+
           <View className="flex-row flex-wrap justify-between items-center gap-2 gap-y-5 mt-1">
             {/* Door  */}
             <View className="w-[47%]">

@@ -61,7 +61,6 @@ const countDevicesRunning = (devicesInfomation) => {
     }
   }, 0);
 };
-
 export const deviceSlice = createSlice({
   name: "device",
   initialState,
