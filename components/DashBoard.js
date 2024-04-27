@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { LineChart } from "react-native-gifted-charts";
 
-const DashBoard = ({ data, name, unit }) => {
+const DashBoard = ({ data, name, unit, upperBound }) => {
   return (
     <View className="m-2 items-center">
       <Text className="text-2xl font-bold my-5">{name}</Text>
@@ -24,7 +24,7 @@ const DashBoard = ({ data, name, unit }) => {
           endOpacity={0.2}
           initialSpacing={0}
           noOfSections={6}
-          maxValue={60}
+          maxValue={upperBound}
           yAxisColor="#2666DE"
           curved
           yAxisThickness={0}
@@ -35,44 +35,7 @@ const DashBoard = ({ data, name, unit }) => {
           yAxisSide="right"
           xAxisColor="#2666DE"
           xAxisLength={350}
-          pointerConfig={{
-            pointerStripHeight: 160,
-            pointerStripColor: "#2666DE",
-            pointerStripWidth: 2,
-            pointerColor: "#2666DE",
-            radius: 6,
-            pointerLabelWidth: 100,
-            pointerLabelHeight: 90,
-            autoAdjustPointerLabelPosition: false,
-            pointerLabelComponent: (items) => {
-              return (
-                <View
-                  style={{
-                    height: 90,
-                    width: 100,
-                    justifyContent: "center",
-                    marginTop: 30,
-                    marginLeft: -40,
-                  }}
-                >
-                  <View
-                    style={{
-                      paddingHorizontal: 14,
-                      paddingVertical: 6,
-                      borderRadius: 16,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Text style={{ fontWeight: "bold", textAlign: "center" }}>
-                      {items[0].value + unit}
-                      {"\n"}
-                      {items[0].time}
-                    </Text>
-                  </View>
-                </View>
-              );
-            },
-          }}
+          
         />
       </View>
     </View>

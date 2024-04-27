@@ -2,8 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { LineChart } from "react-native-gifted-charts";
 
-const UserDashBoard = ({ predictedData, realData, lowest, highest, average, name, unit }) => {
-
+const UserDashBoard = ({ predictedData, realData, name, unit, upperBound }) => {
   const hour = new Date().getHours();
   const extractHourFromTime = (time) => {
     const [hour, _] = time.split(":");
@@ -16,8 +15,8 @@ const UserDashBoard = ({ predictedData, realData, lowest, highest, average, name
         color: "#2666DE",
         width: 60,
       };
-      const hour = new Date().getHours();
     }
+    const hour = new Date().getHours();
     predictedData.map((data) => {
       if (extractHourFromTime(data.time) == hour) {
         data["label"] = "now";
@@ -26,15 +25,21 @@ const UserDashBoard = ({ predictedData, realData, lowest, highest, average, name
           width: 60,
         };
       }
-    })
-
+    });
   };
   addLabels(predictedData);
-  
-  const filteredRealData= realData.filter((data) => extractHourFromTime(data.time) <= hour);
+
+  const filteredRealData = realData.filter(
+    (data) => extractHourFromTime(data.time) <= hour
+  );
+  const realValues = filteredRealData.map((data) => data.value);
+  const lowestRealValue = Math.min(...realValues);
+  const highestRealValue = Math.max(...realValues);
+  const averageRealValue =
+    realValues.reduce((sum, value) => sum + value, 0) / realValues.length;
 
   return (
-    <View className="h-[60%]">
+    <View className="h-[65vh]">
       <Text className="text-2xl font-bold m-3">{name}</Text>
       <View className="bg-white m-auto rounded-3xl flex-1 p-3 w-[95vw] justify-center ">
         <LineChart
@@ -60,7 +65,7 @@ const UserDashBoard = ({ predictedData, realData, lowest, highest, average, name
           endOpacity2={0.1}
           initialSpacing={0}
           noOfSections={6}
-          maxValue={60}
+          maxValue={upperBound}
           yAxisColor="#2666DE"
           curved
           yAxisThickness={0}
@@ -84,24 +89,26 @@ const UserDashBoard = ({ predictedData, realData, lowest, highest, average, name
         </View>
         <View className="p-5">
           <View className="flex-row items-center justify-between mb-3 py-2 border-b-2 border-gray-300">
-            <Text>Lowest Temperature:</Text>
+            <Text>Lowest Real Temperature:</Text>
             <Text>
-              {lowest ? lowest : 0}
+              {lowestRealValue ? lowestRealValue : 0}
               {unit}
             </Text>
           </View>
           <View className="flex-row items-center justify-between mb-3 py-2 border-b-2 border-gray-300">
-            <Text>Highest Temperature:</Text>
+            <Text>Highest Real Temperature:</Text>
             <Text>
-              {highest ? highest : 0}
+              {highestRealValue ? highestRealValue : 0}
               {unit}
             </Text>
           </View>
 
           <View className="flex-row items-center justify-between">
-            <Text>Average Temperature:</Text>
+            <Text>Average Real Temperature:</Text>
             <Text>
-              {average ? average.toPrecision(3) : 0}
+              {averageRealValue.toPrecision(4)
+                ? averageRealValue.toPrecision(4)
+                : 0}
               {unit}
             </Text>
           </View>

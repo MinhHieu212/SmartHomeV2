@@ -8,6 +8,8 @@ import {
   View,
   TextInput,
   FlatList,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Header from "../components/Header";
 import React, { useState } from "react";
@@ -59,7 +61,8 @@ const userList = [
   },
   {
     name: "User 15",
-  },]
+  },
+];
 
 const UserListScreen = () => {
   const [username, setUsername] = useState("");
@@ -71,10 +74,6 @@ const UserListScreen = () => {
       <ScrollView>
         <View className="flex-1 px-6 pt-5 pb-10 mt-3 bg-[#EEF5FF]">
           <View className="flex flex-row items-center justify-between border-2 bg-white border-gray-200 px-4 py-2 rounded-lg">
-            {/* <Text className = "text-blue-500 text-xl">UserListScreen</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("UserDashBoard", { userName :  "User 1"})}>
-            <Text className = "text-xl rounded-xl mt-5 px-4 py-2 bg-blue-400 text-white font-bold">User 1</Text>
-            </TouchableOpacity> */}
             <TextInput
               placeholder="Enter user account name"
               onChangeText={setUsername}
@@ -87,22 +86,29 @@ const UserListScreen = () => {
             </TouchableOpacity>
           </View>
           <View className="mt-5 flex justify-between rounded-2xl shadow-2x bg-white p-3">
-            <Text className="text-xl font-bold w-full border-[#8391A1] border-b-2 pb-2">
+            <Text className="text-2xl w-full  text-center font-bold pb-4 border-[#8391A1] border-b-2">
               User List
             </Text>
-            
-            {
-              userList.map((item) => (
-                <TouchableOpacity key={item.name} onPress={() => navigation.navigate("UserDashBoard", { userName :  item.name})}>
-                  <View className="flex flex-row border-b-2 items-center justify-between shadow-2x h-16 border-[#8391A1] bg-white">
-                  <Text >
-                    {item.name}
-                  </Text>
-                  <Feather name="chevron-right" size={24} color="#8391A1"></Feather>
+
+            {userList.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() =>
+                  navigation.navigate("UserDashBoard", {
+                    userName: item.name,
+                  })
+                }
+              >
+                <View className="flex flex-row border-b-2 items-center justify-between shadow-2x h-16 border-[#8391A1] bg-white">
+                  <Text className="text-lg">{item.name}</Text>
+                  <Feather
+                    name="chevron-right"
+                    size={24}
+                    color="#8391A1"
+                  ></Feather>
                 </View>
-                </TouchableOpacity>
-              ))
-            }
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
       </ScrollView>
@@ -112,4 +118,8 @@ const UserListScreen = () => {
 
 export default UserListScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
