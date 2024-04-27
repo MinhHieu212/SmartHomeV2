@@ -142,7 +142,15 @@ const HomeScreen = () => {
           </View>
 
           {/* Devices */}
-          <Text className="text-xl font-bold mt-3">Devices</Text>
+          <View className="flex-row items-center justify-between mt-2">
+            <Text className="text-xl font-bold">Devices</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("History")}>
+              <Text className="text-md mr-2 text-blue-500 font-semibold">
+                History
+              </Text>
+            </TouchableOpacity>
+          </View>
+          
           <View className="flex-row flex-wrap justify-between items-center gap-2 gap-y-5 mt-1">
             {/* Door  */}
             <View className="w-[47%]">
