@@ -3,6 +3,14 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import React from "react";
 
+const displayVNTime = (value) => {
+  const existingStart = new Date(value);
+
+  existingStart.setHours(existingStart.getHours() + 8);
+
+  return existingStart.toISOString().slice(11, 16);
+};
+
 const HistoryCard = ({ content, date }) => {
   const isOff = content.includes("off");
   const isClose = content.includes("closed");
@@ -21,7 +29,7 @@ const HistoryCard = ({ content, date }) => {
           {date.split("T")[0]}
         </Text>
         <Text className="p-1 text-md font-bold text-blue-800">
-          {date.split("T")[1].slice(0, 5)}
+          {displayVNTime(date)}
         </Text>
       </View>
     </View>

@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 const displayVNTime = (value) => {
   const existingStart = new Date(value);
 
-  existingStart.setHours(existingStart.getHours() + 7);
+  existingStart.setHours(existingStart.getHours() + 8);
 
   return (
     "Time: " +
