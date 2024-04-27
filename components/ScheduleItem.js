@@ -7,7 +7,7 @@ import { getAllDivice, updateDeviceState } from "../apis/deviceAPI";
 const displayVNTime = (value) => {
   const existingStart = new Date(value);
 
-  existingStart.setHours(existingStart.getHours() + 7);
+  existingStart.setHours(existingStart.getHours() + 8);
 
   return existingStart.toISOString().slice(11, 16);
 };
