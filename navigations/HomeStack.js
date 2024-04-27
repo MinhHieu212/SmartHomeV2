@@ -7,6 +7,7 @@ import {
   DoorDeviceScreen,
   HomeScreen,
 } from "../screens";
+import HistoryScreen from "../screens/HistoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,8 @@ const HomeStack = () => {
       <Stack.Screen name="Dashboard" component={DashboardScreen}></Stack.Screen>
       <Stack.Screen name="Notice" component={NoticeScreen}></Stack.Screen>
       <Stack.Screen name="FanDevice" component={FanDeviceScreen}></Stack.Screen>
+      <Stack.Screen name="History" component={HistoryScreen}></Stack.Screen>
+
       <Stack.Screen
         name="DoorDevice"
         component={DoorDeviceScreen}
