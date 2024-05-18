@@ -10,7 +10,7 @@ import { setDevicesInfomation } from "../redux/deviceSlice/deviceSlice";
 const displayVNTime = (value) => {
   const existingStart = new Date(value);
 
-  existingStart.setHours(existingStart.getHours() + 8);
+  existingStart.setHours(existingStart.getHours() + 7);
 
   return existingStart.toISOString().slice(11, 16);
 };
@@ -99,6 +99,7 @@ const AddNewSchedule = ({ closeModal = () => {} }) => {
             testID="dateTimePicker"
             mode="time"
             value={new Date(0)}
+            timeZoneOffsetInMinutes={420}
             is24Hour={true}
             onChange={(evt, selectedDate) => {
               setShowFrom(false);
@@ -128,6 +129,7 @@ const AddNewSchedule = ({ closeModal = () => {} }) => {
             testID="dateTimePicker"
             mode="time"
             value={new Date(0)}
+            timeZoneOffsetInMinutes={420}
             is24Hour={true}
             onChange={(evt, selectedDate) => {
               setShowTo(false);
