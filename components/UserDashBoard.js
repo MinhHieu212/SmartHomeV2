@@ -21,7 +21,7 @@ const UserDashBoard = ({ predictedData, realData, name, unit, upperBound }) => {
       if (extractHourFromTime(data.time) == hour) {
         data["label"] = "now";
         data["labelTextStyle"] = {
-          color: "red",
+          color: "#F25656",
           width: 60,
         };
       }

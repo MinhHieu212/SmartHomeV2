@@ -35,7 +35,6 @@ const DashBoard = ({ data, name, unit, upperBound }) => {
           yAxisSide="right"
           xAxisColor="#2666DE"
           xAxisLength={350}
-          
         />
       </View>
     </View>

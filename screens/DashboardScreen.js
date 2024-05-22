@@ -10,22 +10,22 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import DashBoard from "../components/DashBoard";
 import { getDashboard } from "../apis/dashboardAPI";
+import { humi_data_fake, temp_data_fake } from "../assets/fakeData";
 
 const DashboardScreen = () => {
+  const [temperature, setTemperature] = useState(temp_data_fake.data.realData);
+  const [humidity, setHumidity] = useState(humi_data_fake.data.realData);
 
-  const [temperature, setTemperature] = useState([]);
-  const [humidity, setHumidity] = useState([]);
   useEffect(() => {
     const getTemperature = async () => {
       const temperatureData = await getDashboard("temperature");
-      setTemperature(temperatureData.data.realData);
-      // setHumidity(temperatureData.data.humidity);
-    }
+      // setTemperature(temperatureData.data.realData);
+    };
     getTemperature();
     const getHumidity = async () => {
       const humidityData = await getDashboard("humidity");
-      setHumidity(humidityData.data.realData);
-    }
+      // setHumidity(humidityData.data.realData);
+    };
     getHumidity();
   }, []);
 
@@ -41,7 +41,6 @@ const DashboardScreen = () => {
         color: "#2666DE",
         width: 60,
       };
-      
     }
     const hour = new Date().getHours();
     temperature.map((data) => {
@@ -52,20 +51,33 @@ const DashboardScreen = () => {
           width: 60,
         };
       }
-    })
-
+    });
   };
   addLabels(temperature);
   addLabels(humidity);
-  const filteredRealData= temperature.filter((data) => extractHourFromTime(data.time) <= hour);
-  const filterHumidity= humidity.filter((data) => extractHourFromTime(data.time) <= hour);
+  const filteredRealData = temperature.filter(
+    (data) => extractHourFromTime(data.time) <= hour
+  );
+  const filterHumidity = humidity.filter(
+    (data) => extractHourFromTime(data.time) <= hour
+  );
   return (
     <SafeAreaView className="flex-1 bg-[#EEF5FF] mb-[70]">
       <StatusBar barStyle={"opaque"} backgroundColor="black"></StatusBar>
       <Header name="Dashboard"></Header>
       <ScrollView>
-        <DashBoard data={filteredRealData} name="Temperature" unit="°C" upperBound={60}></DashBoard>
-        <DashBoard data={filterHumidity} name="Humidity" unit="%" upperBound={100}></DashBoard>
+        <DashBoard
+          data={filteredRealData}
+          name="Temperature"
+          unit="°C"
+          upperBound={60}
+        ></DashBoard>
+        <DashBoard
+          data={filterHumidity}
+          name="Humidity"
+          unit="%"
+          upperBound={100}
+        ></DashBoard>
         {/* <DashBoard data={temperature} name="Lighting" unit="cd"></DashBoard> */}
       </ScrollView>
     </SafeAreaView>
