@@ -11,22 +11,25 @@ import Header from "../components/Header";
 import UserDashBoard from "../components/UserDashBoard";
 import { getAllDivice } from "../apis/deviceAPI";
 import { getDashboard } from "../apis/dashboardAPI";
-import { fakeData } from "../assets/fakeData";
+import { humi_data_fake, temp_data_fake } from "../assets/fakeData";
 
 const UserDashboardScreen = ({ route }) => {
-  const [device, setDevice] = useState([]);
-  const [predictedData, setPredictedData] = useState(
-    fakeData.data.predictedData
-  );
-  const [realData, setRealData] = useState(fakeData.data.realData);
+  const { userName } = route.params;
   const [lowest, setLowest] = useState(0);
   const [highest, setHighest] = useState(0);
   const [average, setAverage] = useState(0);
+  const [device, setDevice] = useState([]);
 
-  const [predictHumidity, setPredictHumidity] = useState(
-    fakeData.data.predictedData
+  const [realData, setRealData] = useState(temp_data_fake.data.realData);
+  const [realHumidity, setRealHumidity] = useState(
+    humi_data_fake.data.realData
   );
-  const [realHumidity, setRealHumidity] = useState(fakeData.data.realData);
+  const [predictedData, setPredictedData] = useState(
+    temp_data_fake.data.predictedData
+  );
+  const [predictHumidity, setPredictHumidity] = useState(
+    humi_data_fake.data.predictedData
+  );
 
   useEffect(() => {
     const getDevices = async () => {
@@ -38,18 +41,16 @@ const UserDashboardScreen = ({ route }) => {
     const getPredictedData = async () => {
       const predictedData = await getDashboard("temperature");
       setPredictedData(predictedData.data.predictedData);
-      setRealData(predictedData.data.realData);
+      // setRealData(predictedData.data.realData);
     };
     getPredictedData();
     const getHumidityData = async () => {
       const humidityData = await getDashboard("humidity");
       setPredictHumidity(humidityData.data.predictedData);
-      setRealHumidity(humidityData.data.realData);
+      // setRealHumidity(humidityData.data.realData);
     };
     getHumidityData();
   }, []);
-
-  const { userName } = route.params;
 
   return (
     <SafeAreaView className="flex-1 bg-[#EEF5FF] mb-[70]">

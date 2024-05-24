@@ -33,10 +33,13 @@ const FanDeviceScreen = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [currentLevel, setCurrentLevel] = useState(FanInformation?.level);
+  // const [currentLevel, setCurrentLevel] = useState(FanInformation?.level);
 
   const handleUpdateAutoMode = async () => {
+    const prevLevel = FanInformation?.level || 1;
     const prevIsAuto = FanInformation?.isAuto;
+    const prevState = FanInformation?.state;
+
     dispatch(
       updateDevicesInfomation({
         name: FanInformation?.name,
@@ -49,7 +52,12 @@ const FanDeviceScreen = () => {
     const putData = {
       device_id: FanInformation?.device_id,
       isAuto: Number(!prevIsAuto),
+      level: prevLevel,
+      state: Number(prevState),
+      topic: FanInformation?.topic,
     };
+
+    console.log("handleUpdateAutoMode", putData);
 
     try {
       await updateDeviceState(putData);
@@ -67,6 +75,8 @@ const FanDeviceScreen = () => {
 
   const handleUpdateLevel = async (level) => {
     const prevLevel = FanInformation?.level || 1;
+    const prevState = FanInformation?.state;
+
     dispatch(
       updateDevicesInfomation({
         name: FanInformation?.name,
@@ -79,7 +89,11 @@ const FanDeviceScreen = () => {
     const putData = {
       device_id: FanInformation?.device_id,
       level: level,
+      state: Number(prevState),
+      topic: FanInformation?.topic,
     };
+
+    console.log("handleUpdateLevel", putData);
 
     try {
       await updateDeviceState(putData);
@@ -97,6 +111,8 @@ const FanDeviceScreen = () => {
 
   const handleUpdateFanState = async () => {
     const prevState = FanInformation?.state;
+    const prevLevel = FanInformation?.level || 1;
+
     dispatch(
       updateDevicesInfomation({
         name: FanInformation?.name,
@@ -109,7 +125,11 @@ const FanDeviceScreen = () => {
     const putData = {
       device_id: FanInformation?.device_id,
       state: Number(!prevState),
+      level: prevLevel,
+      topic: FanInformation?.topic,
     };
+
+    console.log("handleUpdateFanState", putData);
 
     try {
       await updateDeviceState(putData);

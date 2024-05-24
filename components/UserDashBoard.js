@@ -21,7 +21,7 @@ const UserDashBoard = ({ predictedData, realData, name, unit, upperBound }) => {
       if (extractHourFromTime(data.time) == hour) {
         data["label"] = "now";
         data["labelTextStyle"] = {
-          color: "red",
+          color: "#F25656",
           width: 60,
         };
       }
@@ -61,7 +61,7 @@ const UserDashBoard = ({ predictedData, realData, name, unit, upperBound }) => {
           endOpacity={0.2}
           startFillColor2="red"
           endFillColor2="red"
-          startOpacity2={1}
+          startOpacity2={10}
           endOpacity2={0.1}
           initialSpacing={0}
           noOfSections={6}

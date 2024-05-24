@@ -55,8 +55,11 @@ const DeviceItem = ({
     const putData = {
       device_id: device_obj?.device_id,
       state: Number(!prevState),
+      level: device_obj?.level || 1,
       topic: device_obj?.topic,
     };
+
+    console.log("handleUpdateState", putData);
 
     try {
       await updateDeviceState(putData);
